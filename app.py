@@ -61,7 +61,19 @@ def health():
     try:
         # Test database connection
         db.session.execute(text('SELECT 1'))
-        return {'status': 'healthy', 'database': 'connected'}, 200
+        
+        # Count records
+        project_count = Project.query.count()
+        feedback_count = Feedback.query.count()
+        region_count = RegionBudget.query.count()
+        
+        return {
+            'status': 'healthy',
+            'database': 'connected',
+            'projects': project_count,
+            'feedback': feedback_count,
+            'regions': region_count
+        }, 200
     except Exception as e:
         return {'status': 'unhealthy', 'error': str(e)}, 503
 
