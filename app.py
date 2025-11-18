@@ -36,7 +36,19 @@ def check_admin_access():
             return redirect(url_for('login'))
 
 # SQLAlchemy Configuration for PostgreSQL
-app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
+DB_URI = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
+
+# Validate database URI
+try:
+    from urllib.parse import urlparse
+    parsed = urlparse(DB_URI)
+    if not parsed.hostname:
+        raise ValueError("Invalid database URL")
+except Exception as e:
+    print(f"Warning: Invalid database URI: {e}")
+    print(f"Database URI: {DB_URI}")
+
+app.config['SQLALCHEMY_DATABASE_URI'] = DB_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize database
