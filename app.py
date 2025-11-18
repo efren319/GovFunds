@@ -388,8 +388,46 @@ def admin():
         # Get projects
         projects = Project.query.order_by(Project.id.desc()).limit(50).all()
         
+        # Add unresolved report count to each project
+        projects_with_reports = []
+        for project in projects:
+            unresolved_count = ProjectReport.query.filter_by(
+                project_id=project.id,
+                is_resolved=False
+            ).count()
+            project_dict = {
+                'id': project.id,
+                'name': project.name,
+                'department': project.department,
+                'description': project.description,
+                'allocated_budget': project.allocated_budget,
+                'spent': project.spent,
+                'status': project.status,
+                'region': project.region,
+                'unresolved_reports': unresolved_count
+            }
+            projects_with_reports.append(project_dict)
+        
         # Get all unresolved reports with project info
         unresolved_reports = ProjectReport.query.filter_by(is_resolved=False).order_by(ProjectReport.created_at.desc()).all()
+        
+        # Convert reports to dictionaries with project names
+        reports_with_project_names = []
+        for report in unresolved_reports:
+            project = Project.query.get(report.project_id)
+            report_dict = {
+                'id': report.id,
+                'project_id': report.project_id,
+                'project_name': project.name if project else 'Unknown Project',
+                'reporter_name': report.reporter_name,
+                'reporter_email': report.reporter_email,
+                'report_subject': report.report_subject,
+                'report_message': report.report_message,
+                'report_type': report.report_type,
+                'is_resolved': report.is_resolved,
+                'created_at': report.created_at.strftime('%Y-%m-%d %H:%M') if report.created_at else ''
+            }
+            reports_with_project_names.append(report_dict)
         
         # Get all unique departments
         departments = db.session.query(DepartmentBudget.department).distinct().order_by(DepartmentBudget.department).all()
@@ -399,13 +437,13 @@ def admin():
         regions = db.session.query(RegionBudget.region).distinct().order_by(RegionBudget.region).all()
         regions = [r[0] for r in regions]
     except Exception as e:
-        projects = []
-        unresolved_reports = []
+        projects_with_reports = []
+        reports_with_project_names = []
         departments = []
         regions = []
         print(f"Admin query error: {e}")
     
-    return render_template('admin.html', projects=projects, unresolved_reports=unresolved_reports, departments=departments, regions=regions)
+    return render_template('admin.html', projects=projects_with_reports, unresolved_reports=reports_with_project_names, departments=departments, regions=regions)
 
 if __name__ == '__main__':
     with app.app_context():
