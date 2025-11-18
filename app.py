@@ -1,6 +1,6 @@
 # app.py
 from flask import Flask, render_template, g, request, redirect, url_for, jsonify, flash, session
-from sqlalchemy import func  # type: ignore
+from sqlalchemy import func, text  # type: ignore
 import os
 from functools import wraps
 import hashlib
@@ -41,6 +41,17 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize database
 db.init_app(app)
+
+# Health check endpoint for Railway
+@app.route('/health')
+def health():
+    """Health check endpoint for Railway"""
+    try:
+        # Test database connection
+        db.session.execute(text('SELECT 1'))
+        return {'status': 'healthy', 'database': 'connected'}, 200
+    except Exception as e:
+        return {'status': 'unhealthy', 'error': str(e)}, 503
 
 # Authentication decorator (for resolve-report)
 def login_required(f):
@@ -374,8 +385,15 @@ def admin():
 
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all()
+        try:
+            db.create_all()
+        except Exception as e:
+            print(f"Warning: Could not create tables: {e}")
     
     # Set debug mode based on environment
     debug_mode = os.getenv('FLASK_ENV') != 'production'
-    app.run(debug=debug_mode)
+    
+    # Get PORT from environment (Railway provides this)
+    port = int(os.getenv('PORT', 5000))
+    
+    app.run(host='0.0.0.0', port=port, debug=debug_mode)
