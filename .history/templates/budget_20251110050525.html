@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Budget Overview</h2>
+
+<table border="1" cellpadding="10">
+  <tr>
+    <th>ID</th>
+    <th>Project Name</th>
+    <th>Department</th>
+    <th>Allocated Budget</th>
+    <th>Spent Amount</th>
+    <th>Status</th>
+  </tr>
+  {% for p in projects %}
+  <tr>
+    <td>{{ p.id }}</td>
+    <td>{{ p.name }}</td>
+    <td>{{ p.department }}</td>
+    <td>₱{{ "%.2f"|format(p['allocated_budget'] or 0) }}</td>
+    <td>₱{{ "%.2f"|format(p['spent'] or 0) }}</td>
+    <td>{{ p.status }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<div style="display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 40px;">
+  <div style="width: 45%; min-width: 300px;">
+    <h2 style="text-align:center;">Budget by Department</h2>
+    <div style="width: 100%; height: 400px;">
+      <canvas id="departmentChart"
+          data-labels='{{ dept_labels|tojson }}'
+          data-data='{{ dept_data|tojson }}'></canvas>
+    </div>
+  </div>
+
+  <div style="width: 45%; min-width: 300px;">
+    <h2 style="text-align:center;">Budget by Region</h2>
+    <div style="width: 100%; height: 400px;">
+      <canvas id="regionChart"
+          data-labels='{{ region_labels|tojson }}'
+          data-data='{{ region_data|tojson }}'></canvas>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Department Chart
+    const deptCtx = document.getElementById('departmentChart').getContext('2d');
+    const deptLabels = JSON.parse(document.getElementById('departmentChart').dataset.labels);
+    const deptData = JSON.parse(document.getElementById('departmentChart').dataset.data);
+
+    const centerTextPlugin = {
+        id: 'centerText',
+        afterDraw(chart) {
+            const {ctx, chartArea: {width, height}} = chart;
+            ctx.save();
+            ctx.font = `${Math.min(width, height) / 20}px sans-serif`;
+            ctx.fillStyle = 'black';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('Budget by Department', width / 2, height / 2);
+            ctx.restore();
+        }
+    };
+
+    const deptChart = new Chart(deptCtx, {
+        type: 'doughnut',
+        data: {
+            labels: deptLabels,
+            datasets: [{
+                data: deptData,
+                backgroundColor: generateColors(deptData.length),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '50%',
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: { boxWidth: 15, boxHeight: 15 }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return '₱' + context.raw.toLocaleString();
+                        }
+                    }
+                }
+            }
+        },
+        plugins: [centerTextPlugin]
+    });
+
+    // Region Chart
+    const regCtx = document.getElementById('regionChart').getContext('2d');
+    const regLabels = JSON.parse(document.getElementById('regionChart').dataset.labels);
+    const regData = JSON.parse(document.getElementById('regionChart').dataset.data);
+
+    const centerTextPlugin2 = {
+        id: 'centerText',
+        afterDraw(chart) {
+            const {ctx, chartArea: {width, height}} = chart;
+            ctx.save();
+            ctx.font = `${Math.min(width, height) / 20}px sans-serif`;
+            ctx.fillStyle = 'black';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('Budget by Region', width / 2, height / 2);
+            ctx.restore();
+        }
+    };
+
+    const regChart = new Chart(regCtx, {
+        type: 'doughnut',
+        data: {
+            labels: regLabels,
+            datasets: [{
+                data: regData,
+                backgroundColor: generateColors(regData.length),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '50%',
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: { boxWidth: 15, boxHeight: 15 }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return '₱' + context.raw.toLocaleString();
+                        }
+                    }
+                }
+            }
+        },
+        plugins: [centerTextPlugin2]
+    });
+
+    function generateColors(count) {
+        const baseColor = '#00B49F';
+        const colors = [];
+        for (let i = 0; i < count; i++) {
+            // Convert hex to RGB and adjust opacity for variation
+            const opacity = 0.4 + (i / count) * 0.6; // opacity ranges from 0.4 to 1.0
+            colors.push(baseColor + Math.floor(opacity * 255).toString(16).padStart(2, '0'));
+        }
+        return colors;
+    }
+});
+</script>
+
+{% endblock %}

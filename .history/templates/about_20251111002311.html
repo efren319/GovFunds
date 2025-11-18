@@ -1,0 +1,27 @@
+<!-- templates/about.html -->
+{% extends "base.html" %}
+{% block content %}
+<h2>About GovFunds Transparency Portal</h2>
+<p>The GovFunds Transparency Portal is a student-built platform that enables public access to government budget and project spending data, supporting accountability and informed citizen participation.</p>
+
+<section class="sdg-cards">
+  <div class="sdg">
+    <h4>SDG 16</h4>
+    <p>Peace, Justice, and Strong Institutions — we promote transparency and accountability.</p>
+  </div>
+  <div class="sdg">
+    <h4>SDG 9</h4>
+    <p>Industry, Innovation, and Infrastructure — we use digital tools to improve governance.</p>
+  </div>
+</section>
+
+<h3>Team — Group 1</h3>
+<div class="team-grid">
+  {% for t in team %}
+  <div class="team-card">
+    <strong>{{ t.name }}</strong>
+    <div class="muted">{{ t.role }}</div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

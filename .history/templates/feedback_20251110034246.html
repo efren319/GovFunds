@@ -1,0 +1,29 @@
+<!-- templates/feedback.html -->
+{% extends "base.html" %}
+{% block content %}
+<h2>Citizen Feedback</h2>
+<p>Send suggestions or report issues with projects.</p>
+
+<form method="post" class="form">
+  <div class="form-row">
+    <input type="text" name="name" placeholder="Your name (optional)">
+    <input type="email" name="email" placeholder="Email (optional)">
+  </div>
+  <div class="form-row">
+    <textarea name="message" rows="5" placeholder="Your message" required></textarea>
+  </div>
+  <div class="form-row">
+    <button class="btn" type="submit">Submit Feedback</button>
+  </div>
+</form>
+
+<h3>Recent Feedback</h3>
+<ul class="feedback-list">
+  {% for f in recent %}
+  <li>
+    <div class="f-meta"><strong>{{ f['name'] or 'Anonymous' }}</strong> — <span class="muted">{{ f['created_at'] }}</span></div>
+    <div class="f-msg">{{ f['message'] }}</div>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

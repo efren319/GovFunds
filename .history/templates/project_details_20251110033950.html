@@ -1,0 +1,18 @@
+<!-- templates/project_detail.html -->
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ project['name'] }}</h2>
+<p class="muted">{{ project['department'] }} — {{ project['region'] or 'N/A' }}</p>
+<p>{{ project['description'] }}</p>
+
+<ul class="detail-list">
+  <li>Allocated Budget: ₱{{ "{:,.2f}".format(project['allocated_budget'] or 0) }}</li>
+  <li>Spent: ₱{{ "{:,.2f}".format(project['spent'] or 0) }}</li>
+  <li>Remaining: ₱{{ "{:,.2f}".format((project['allocated_budget'] or 0) - (project['spent'] or 0)) }}</li>
+  <li>Status: {{ project['status'] }}</li>
+  <li>Start: {{ project['start_date'] or 'N/A' }}</li>
+  <li>End: {{ project['end_date'] or 'N/A' }}</li>
+</ul>
+
+<a class="btn" href="{{ url_for('projects') }}">Back to Projects</a>
+{% endblock %}

@@ -1,0 +1,21 @@
+<!-- templates/projects.html -->
+{% extends "base.html" %}
+{% block content %}
+<h2>Projects</h2>
+<p>List of government projects being tracked.</p>
+
+<div class="projects-grid">
+  {% for p in projects %}
+  <div class="project-card">
+    <h3><a href="{{ url_for('project_detail', pid=p['id']) }}">{{ p['name'] }}</a></h3>
+    <p class="muted">{{ p['department'] }} — {{ p['region'] or 'N/A' }}</p>
+    <p>{{ p['description'] or '-' }}</p>
+    <div class="project-meta">
+      <div>Allocated: ₱{{ "{:,.2f}".format(p['allocated_budget'] or 0) }}</div>
+      <div>Spent: ₱{{ "{:,.2f}".format(p['spent'] or 0) }}</div>
+      <div>Status: <strong>{{ p['status'] }}</strong></div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

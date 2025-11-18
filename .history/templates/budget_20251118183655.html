@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block hero %}
+<!-- Annual Budget Hero Section - Full Width, No Margins -->
+<div class="annual-budget-hero">
+  <div class="annual-budget-hero-content">
+    <!-- Left Side: Annual Budget -->
+    <div class="annual-budget-left">
+      <p>Annual Budget</p>
+      <h1>₱{{ "{:,.0f}".format(annual_budget) }}</h1>
+      <p>Year {{ selected_year }}</p>
+    </div>
+    
+    <!-- Right Side: Rotating Department -->
+    <div class="annual-budget-right">
+      <p>Top Department</p>
+      <p id="deptName">-</p>
+      <p id="deptBudget">-</p>
+    </div>
+  </div>
+  
+  <!-- Year Selector -->
+  <div class="hero-year-selector">
+    <label for="yearSelect">Select Year:</label>
+    <select id="yearSelect">
+      {% for year in available_years %}
+      <option value="{{ year }}" {% if year == selected_year %}selected{% endif %}>{{ year }}</option>
+      {% endfor %}
+    </select>
+  </div>
+</div>
+
+<section class="budget-quick-cards">
+  <div class="budget-info-card overview-card">
+    <h3>Annual Budget Overview</h3>
+    <p>A concise summary of the total national budget for the year, highlighting major spending priorities and overall fund allocation.</p>
+  </div>
+  <div class="budget-info-card summary-card">
+    <h3>Program Budget Summary</h3>
+    <p>Breakdown of how funds are distributed across key government programs, showing where resources are focused and how each program contributes to national development.</p>
+  </div>
+  <div class="budget-info-card distribution-card">
+    <h3>Regional Budget Distribution</h3>
+    <p>Visual and numerical presentation of the budget allocated to each region, helping users compare funding levels and understand regional investment patterns.</p>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block content %}
+
+<h2>Budget Overview</h2>
+
+<div class="budget-table-carousel">
+  <div class="budget-table-header-row">
+    <div class="budget-table-cell">Project Name</div>
+    <div class="budget-table-cell">Allocated Budget</div>
+    <div class="budget-table-cell">Spent Amount</div>
+  </div>
+  <div class="budget-table-carousel-track" id="budgetTableTrack">
+    {% for p in projects %}
+    <div class="budget-table-row">
+      <div class="budget-table-cell">{{ p.name }}</div>
+      <div class="budget-table-cell">₱{{ "%.2f"|format(p['allocated_budget'] or 0) }}</div>
+      <div class="budget-table-cell">₱{{ "%.2f"|format(p['spent'] or 0) }}</div>
+    </div>
+    {% endfor %}
+    <!-- Duplicate items for infinite loop -->
+    {% for p in projects %}
+    <div class="budget-table-row">
+      <div class="budget-table-cell">{{ p.name }}</div>
+      <div class="budget-table-cell">₱{{ "%.2f"|format(p['allocated_budget'] or 0) }}</div>
+      <div class="budget-table-cell">₱{{ "%.2f"|format(p['spent'] or 0) }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="budget-table-footer">
+    <a href="{{ url_for('projects') }}" class="view-more-link">View More Projects →</a>
+  </div>
+</div>
+
+<div class="charts-container">
+  <div class="chart-card">
+    <h2>Budget by Department</h2>
+    <div class="chart-with-table">
+      <div class="chart-wrapper">
+        <canvas id="departmentChart"
+            data-labels='{{ dept_labels|tojson }}'
+            data-data='{{ dept_data|tojson }}'></canvas>
+      </div>
+      <div class="chart-table">
+        <div class="chart-table-header">
+          <div class="chart-table-col">Department</div>
+          <div class="chart-table-col">Amount</div>
+          <div class="chart-table-col">Percentage</div>
+        </div>
+        <div class="chart-table-body" id="deptTableBody">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <h2>Budget by Region</h2>
+    <div class="chart-with-table">
+      <div class="chart-wrapper">
+        <canvas id="regionChart"
+            data-labels='{{ region_labels|tojson }}'
+            data-data='{{ region_data|tojson }}'></canvas>
+      </div>
+      <div class="chart-table">
+        <div class="chart-table-header">
+          <div class="chart-table-col">Region</div>
+          <div class="chart-table-col">Amount</div>
+          <div class="chart-table-col">Percentage</div>
+        </div>
+        <div class="chart-table-body" id="regionTableBody">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='carousel.js') }}"></script>
+<script>
+  const departmentsList = [
+      {% for dept in department_budgets_list %}
+      {
+          name: '{{ dept.department }}',
+          budget: {{ dept.budget }}
+      }{{ "," if not loop.last }}
+      {% endfor %}
+  ];
+</script>
+<script src="{{ url_for('static', filename='budget.js') }}"></script>
+
+{% endblock %}

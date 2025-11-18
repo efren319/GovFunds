@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Annual Budget Hero Section -->
+<div style="background: linear-gradient(135deg, #00B49F 0%, #2a2a2a 100%); color: #fff; padding: 3rem 2rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);">
+  <div style="display: flex; justify-content: space-between; align-items: center; gap: 2rem; flex-wrap: wrap;">
+    <!-- Left Side: Annual Budget -->
+    <div style="flex: 1; min-width: 300px;">
+      <p style="margin: 0 0 0.5rem; font-size: 0.9rem; opacity: 0.9;">Annual Budget</p>
+      <h1 style="margin: 0; font-size: 2.5rem; font-weight: 700;">₱{{ "{:,.0f}".format(annual_budget) }}</h1>
+      <p style="margin: 0.5rem 0 0; font-size: 0.9rem; opacity: 0.9;">Fiscal Year {{ selected_year }}</p>
+    </div>
+    
+    <!-- Right Side: Rotating Department -->
+    <div style="flex: 1; min-width: 300px; background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 8px; backdrop-filter: blur(10px);">
+      <p style="margin: 0 0 0.5rem; font-size: 0.9rem; opacity: 0.9;">Top Department</p>
+      <p id="deptName" style="margin: 0.5rem 0; font-size: 1.2rem; font-weight: 600;">-</p>
+      <p id="deptBudget" style="margin: 0; font-size: 1.4rem; font-weight: 700;">-</p>
+    </div>
+  </div>
+</div>
+
+<h2>Budget Overview</h2>
+
+<div style="margin-bottom: 2rem;">
+  <label for="yearSelect" style="font-weight: bold;">Select Year:</label>
+  <select id="yearSelect" style="padding: 0.6rem; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem;">
+    {% for year in available_years %}
+    <option value="{{ year }}" {% if year == selected_year %}selected{% endif %}>{{ year }}</option>
+    {% endfor %}
+  </select>
+</div>
+
+<table border="1" cellpadding="10">
+  <tr>
+    <th>ID</th>
+    <th>Project Name</th>
+    <th>Department</th>
+    <th>Allocated Budget</th>
+    <th>Spent Amount</th>
+    <th>Status</th>
+  </tr>
+  {% for p in projects %}
+  <tr>
+    <td>{{ p.id }}</td>
+    <td>{{ p.name }}</td>
+    <td>{{ p.department }}</td>
+    <td>₱{{ "%.2f"|format(p['allocated_budget'] or 0) }}</td>
+    <td>₱{{ "%.2f"|format(p['spent'] or 0) }}</td>
+    <td>{{ p.status }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<div style="display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 40px;">
+  <div style="width: 45%; min-width: 300px;">
+    <h2 style="text-align:center;">Budget by Department</h2>
+    <div style="width: 100%; height: 400px;">
+      <canvas id="departmentChart"
+          data-labels='{{ dept_labels|tojson }}'
+          data-data='{{ dept_data|tojson }}'></canvas>
+    </div>
+  </div>
+
+  <div style="width: 45%; min-width: 300px;">
+    <h2 style="text-align:center;">Budget by Region</h2>
+    <div style="width: 100%; height: 400px;">
+      <canvas id="regionChart"
+          data-labels='{{ region_labels|tojson }}'
+          data-data='{{ region_data|tojson }}'></canvas>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Rotating Department Display
+    const departmentsList = [
+        {% for dept in department_budgets_list %}
+        {
+            name: '{{ dept.department }}',
+            budget: {{ dept.budget }}
+        }{{ "," if not loop.last }}
+        {% endfor %}
+    ];
+
+    let currentDeptIndex = 0;
+    const deptNameEl = document.getElementById('deptName');
+    const deptBudgetEl = document.getElementById('deptBudget');
+
+    // Set initial fade in
+    deptNameEl.style.opacity = '1';
+    deptBudgetEl.style.opacity = '1';
+    deptNameEl.style.transition = 'opacity 0.5s ease-in-out';
+    deptBudgetEl.style.transition = 'opacity 0.5s ease-in-out';
+
+    function updateDepartmentDisplay() {
+        if (departmentsList.length > 0) {
+            // Fade out
+            deptNameEl.style.opacity = '0';
+            deptBudgetEl.style.opacity = '0';
+
+            // Update after fade out
+            setTimeout(() => {
+                const dept = departmentsList[currentDeptIndex];
+                deptNameEl.textContent = dept.name;
+                deptBudgetEl.textContent = '₱' + dept.budget.toLocaleString();
+                
+                // Fade in
+                deptNameEl.style.opacity = '1';
+                deptBudgetEl.style.opacity = '1';
+                
+                currentDeptIndex = (currentDeptIndex + 1) % departmentsList.length;
+            }, 250);
+        }
+    }
+
+    // Initial display
+    updateDepartmentDisplay();
+
+    // Rotate every 3 seconds
+    setInterval(updateDepartmentDisplay, 3000);
+
+    // Department Chart
+    const deptCtx = document.getElementById('departmentChart').getContext('2d');
+    const deptLabels = JSON.parse(document.getElementById('departmentChart').dataset.labels);
+    const deptData = JSON.parse(document.getElementById('departmentChart').dataset.data);
+
+    const centerTextPlugin = {
+        id: 'centerText',
+        afterDraw(chart) {
+            const {ctx, chartArea: {width, height}} = chart;
+            ctx.save();
+            ctx.font = `${Math.min(width, height) / 20}px sans-serif`;
+            ctx.fillStyle = 'black';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('Budget by Department', width / 2, height / 2);
+            ctx.restore();
+        }
+    };
+
+    const deptChart = new Chart(deptCtx, {
+        type: 'doughnut',
+        data: {
+            labels: deptLabels,
+            datasets: [{
+                data: deptData,
+                backgroundColor: generateColors(deptData.length),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '50%',
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: { boxWidth: 15, boxHeight: 15 }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return '₱' + context.raw.toLocaleString();
+                        }
+                    }
+                }
+            }
+        },
+        plugins: [centerTextPlugin]
+    });
+
+    // Region Chart
+    const regCtx = document.getElementById('regionChart').getContext('2d');
+    const regLabels = JSON.parse(document.getElementById('regionChart').dataset.labels);
+    const regData = JSON.parse(document.getElementById('regionChart').dataset.data);
+
+    const centerTextPlugin2 = {
+        id: 'centerText',
+        afterDraw(chart) {
+            const {ctx, chartArea: {width, height}} = chart;
+            ctx.save();
+            ctx.font = `${Math.min(width, height) / 20}px sans-serif`;
+            ctx.fillStyle = 'black';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('Budget by Region', width / 2, height / 2);
+            ctx.restore();
+        }
+    };
+
+    const regChart = new Chart(regCtx, {
+        type: 'doughnut',
+        data: {
+            labels: regLabels,
+            datasets: [{
+                data: regData,
+                backgroundColor: generateColors(regData.length),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '50%',
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: { boxWidth: 15, boxHeight: 15 }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return '₱' + context.raw.toLocaleString();
+                        }
+                    }
+                }
+            }
+        },
+        plugins: [centerTextPlugin2]
+    });
+
+    function generateColors(count) {
+        const colors = [];
+        for (let i = 0; i < count; i++) {
+            // Vary hue around the base teal color (168°) but stay within teal range (150° to 190°)
+            const hueVariation = -20 + (i / count) * 40; // varies from -20° to +20° from base
+            const hue = 168 + hueVariation;
+            const lightness = 25 + (i % 5) * 15; // varies 25%, 40%, 55%, 70%, 85% for more distinction
+            const saturation = 70 + (i % 3) * 10; // varies 70%, 80%, 90% saturation
+            colors.push(`hsl(${hue}, ${saturation}%, ${lightness}%)`);
+        }
+        return colors;
+    }
+
+    // Year selector functionality
+    const yearSelect = document.getElementById('yearSelect');
+    if (yearSelect) {
+        yearSelect.addEventListener('change', function() {
+            const year = this.value;
+            window.location.href = `?year=${year}`;
+        });
+    }
+});
+</script>
+
+{% endblock %}

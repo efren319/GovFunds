@@ -1,0 +1,37 @@
+<!-- templates/project_detail.html -->
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ project['name'] }}</h2>
+<p class="muted">{{ project['department'] }} — {{ project['region'] or 'N/A' }}</p>
+<p>{{ project['description'] }}</p>
+
+<ul class="detail-list">
+  <li>Allocated Budget: ₱{{ "{:,.2f}".format(project['allocated_budget'] or 0) }}</li>
+  <li>Spent: ₱{{ "{:,.2f}".format(project['spent'] or 0) }}</li>
+  <li>Remaining: ₱{{ "{:,.2f}".format((project['allocated_budget'] or 0) - (project['spent'] or 0)) }}</li>
+  <li>Status: {{ project['status'] }}</li>
+  <li>Start: {{ project['start_date'] or 'N/A' }}</li>
+  <li>End: {{ project['end_date'] or 'N/A' }}</li>
+</ul>
+
+{% if reports %}
+<h3>Project Reports ({{ reports|length }})</h3>
+<div class="reports-section">
+  {% for report in reports %}
+  <div class="report-card">
+    <div class="report-header">
+      <h4>{{ report['report_subject'] }}</h4>
+      <span class="report-type report-type-{{ report['report_type']|lower }}">{{ report['report_type'] }}</span>
+    </div>
+    <p class="report-message">{{ report['report_message'] }}</p>
+    <div class="report-meta">
+      <span class="report-reporter">{{ report['reporter_name'] or 'Anonymous' }}</span>
+      <span class="report-date">{{ report['created_at'] }}</span>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<a class="btn" href="{{ url_for('projects') }}">Back to Projects</a>
+{% endblock %}

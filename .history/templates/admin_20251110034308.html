@@ -1,0 +1,48 @@
+<!-- templates/admin.html -->
+{% extends "base.html" %}
+{% block content %}
+<h2>Admin — Add Project (Demo)</h2>
+<p>Simple admin form for demo purposes. Protect with authentication in production.</p>
+
+<form method="post" class="form admin-form">
+  <div class="form-row">
+    <input name="name" placeholder="Project name" required>
+    <input name="department" placeholder="Department" required>
+  </div>
+  <div class="form-row">
+    <input name="allocated_budget" type="number" step="0.01" placeholder="Allocated budget">
+    <input name="spent" type="number" step="0.01" placeholder="Spent">
+  </div>
+  <div class="form-row">
+    <input name="region" placeholder="Region">
+    <select name="status">
+      <option>Planned</option>
+      <option>Ongoing</option>
+      <option>Completed</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <textarea name="description" placeholder="Description"></textarea>
+  </div>
+  <div class="form-row">
+    <button class="btn" type="submit">Add Project</button>
+  </div>
+</form>
+
+<h3>Recent Projects</h3>
+<table class="data-table">
+  <thead><tr><th>ID</th><th>Name</th><th>Dept</th><th>Allocated</th><th>Spent</th><th>Status</th></tr></thead>
+  <tbody>
+    {% for p in projects %}
+    <tr>
+      <td>{{ p['id'] }}</td>
+      <td>{{ p['name'] }}</td>
+      <td>{{ p['department'] }}</td>
+      <td>₱{{ "{:,.2f}".format(p['allocated_budget'] or 0) }}</td>
+      <td>₱{{ "{:,.2f}".format(p['spent'] or 0) }}</td>
+      <td>{{ p['status'] }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

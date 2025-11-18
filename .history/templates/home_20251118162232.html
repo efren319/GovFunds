@@ -1,0 +1,105 @@
+<!-- templates/home.html -->
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <h1><b>Gov</b>Funds <br>Transparency Portal</h1>
+  <p>Promoting government transparency through open access to fund and project data.</p>
+  <div class="hero-cta">
+    <a class="btn" href="{{ url_for('projects') }}">View Projects</a>
+    <a class="btn outline" href="{{ url_for('budget') }}">Track Spending</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-value">₱{{ "{:,.2f}".format(total_alloc) }}</div>
+      <div class="stat-label">Total Funds Tracked</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">{{ projects_count }}</div>
+      <div class="stat-label">Projects Listed</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">₱{{ "{:,.2f}".format(total_spent) }}</div>
+      <div class="stat-label">Total Spent</div>
+    </div>
+  </div>
+</section>
+
+<section class="quick-cards">
+  <div class="card budget-card">
+    <h3>Budget Overview</h3>
+    <p>Explore how funds are allocated across departments.</p>
+    <a href="{{ url_for('budget') }}" class="small-link">View Budget</a>
+  </div>
+  <div class="card spending-card">
+    <h3>Spending Tracker</h3>
+    <p>Track project spending vs allocated budgets.</p>
+    <a href="{{ url_for('budget') }}" class="small-link">Track Spending</a>
+  </div>
+  <div class="card feedback-card">
+    <h3>Citizen Feedback</h3>
+    <p>Submit concerns or suggestions about projects.</p>
+    <a href="{{ url_for('feedback') }}" class="small-link">Send Feedback</a>
+  </div>
+</section>
+
+<!-- Feedback Carousel -->
+<section class="feedback-carousel-section">
+  <h2>Recent Citizen Feedback</h2>
+  <div class="feedback-carousel">
+    <div class="feedback-carousel-track" id="feedbackTrack">
+      {% for feedback in recent_feedback %}
+      <div class="feedback-carousel-item">
+        <div class="feedback-item-header">
+          <div class="feedback-item-avatar">
+            <span>{{ feedback.name[0].upper() if feedback.name else 'A' }}</span>
+          </div>
+          <div class="feedback-item-info">
+            <p class="feedback-name">{{ feedback.name or 'Anonymous' }}</p>
+          </div>
+        </div>
+        <p class="feedback-message">{{ feedback.message }}</p>
+        <p class="feedback-date">{{ feedback.created_at.strftime('%B %d, %Y') if feedback.created_at else 'Recently' }}</p>
+      </div>
+      {% endfor %}
+      <!-- Duplicate items for infinite scroll effect -->
+      {% for feedback in recent_feedback %}
+      <div class="feedback-carousel-item">
+        <div class="feedback-item-header">
+          <div class="feedback-item-avatar">
+            <span>{{ feedback.name[0].upper() if feedback.name else 'A' }}</span>
+          </div>
+          <div class="feedback-item-info">
+            <p class="feedback-name">{{ feedback.name or 'Anonymous' }}</p>
+            <span class="feedback-role">{{ feedback.role.capitalize() if feedback.role else 'Citizen' }}</span>
+          </div>
+        </div>
+        <p class="feedback-message">{{ feedback.message }}</p>
+        <p class="feedback-date">{{ feedback.created_at.strftime('%B %d, %Y') if feedback.created_at else 'Recently' }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const track = document.getElementById('feedbackTrack');
+  if (track && track.children.length > 0) {
+    let position = 0;
+    const speed = 1; // pixels per frame
+    const itemWidth = track.children[0].offsetWidth + 20; // item width + gap
+
+    setInterval(() => {
+      position -= speed;
+      
+      // Reset position for infinite loop
+      if (Math.abs(position) >= itemWidth * (track.children.length / 2)) {
+        position = 0;
+      }
+      
+      track.style.transform = `translateX(${position}px)`;
+    }, 30);
+  }
+});
+</script>
+{% endblock %}

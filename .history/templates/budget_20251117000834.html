@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+
+{% block hero %}
+<!-- Annual Budget Hero Section - Full Width, No Margins -->
+<div class="annual-budget-hero">
+  <div class="annual-budget-hero-content">
+    <!-- Left Side: Annual Budget -->
+    <div class="annual-budget-left">
+      <p>Annual Budget</p>
+      <h1>₱{{ "{:,.0f}".format(annual_budget) }}</h1>
+      <p>Year {{ selected_year }}</p>
+    </div>
+    
+    <!-- Right Side: Rotating Department -->
+    <div class="annual-budget-right">
+      <p>Top Department</p>
+      <p id="deptName">-</p>
+      <p id="deptBudget">-</p>
+    </div>
+  </div>
+  
+  <!-- Year Selector -->
+  <div class="hero-year-selector">
+    <label for="yearSelect">Select Year:</label>
+    <select id="yearSelect">
+      {% for year in available_years %}
+      <option value="{{ year }}" {% if year == selected_year %}selected{% endif %}>{{ year }}</option>
+      {% endfor %}
+    </select>
+  </div>
+</div>
+
+<section class="budget_quick-cards">
+  <div class="card Overview-card">
+    <img src="{{ url_for('static', filename='images/budget_overview.png') }}" alt="Budget Overview Icon">
+    <h3>Annual Budget Overview</h3>
+    <p>A concise summary of the total national budget for the year, highlighting major spending priorities and overall fund allocation.</p>
+  </div>
+  <
+  <div class="card Summary-card">
+    <h3>Program Budget Summary</h3>
+    <p>Breakdown of how funds are distributed across key government programs, showing where resources are focused and how each program contributes to national development.</p>
+  </div>
+  <div class="card Distribution-card">
+    <h3>Regional Budget Distribution</h3>
+    <p>Visual and numerical presentation of the budget allocated to each region, helping users compare funding levels and understand regional investment patterns.</p>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block content %}
+
+<h2>Budget Overview</h2>
+
+<table border="1" cellpadding="10">
+  <tr>
+    <th>ID</th>
+    <th>Project Name</th>
+    <th>Department</th>
+    <th>Allocated Budget</th>
+    <th>Spent Amount</th>
+    <th>Status</th>
+  </tr>
+  {% for p in projects %}
+  <tr>
+    <td>{{ p.id }}</td>
+    <td>{{ p.name }}</td>
+    <td>{{ p.department }}</td>
+    <td>₱{{ "%.2f"|format(p['allocated_budget'] or 0) }}</td>
+    <td>₱{{ "%.2f"|format(p['spent'] or 0) }}</td>
+    <td>{{ p.status }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<div class="charts-container">
+  <div class="chart-card">
+    <h2>Budget by Department</h2>
+    <div class="chart-wrapper">
+      <canvas id="departmentChart"
+          data-labels='{{ dept_labels|tojson }}'
+          data-data='{{ dept_data|tojson }}'></canvas>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <h2>Budget by Region</h2>
+    <div class="chart-wrapper">
+      <canvas id="regionChart"
+          data-labels='{{ region_labels|tojson }}'
+          data-data='{{ region_data|tojson }}'></canvas>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='carousel.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Department Carousel Data
+    const departmentsList = [
+        {% for dept in department_budgets_list %}
+        {
+            name: '{{ dept.department }}',
+            budget: {{ dept.budget }}
+        }{{ "," if not loop.last }}
+        {% endfor %}
+    ];
+
+    // Initialize carousel
+    initDepartmentCarousel(departmentsList);
+
+    // Department Chart
+    const deptCtx = document.getElementById('departmentChart').getContext('2d');
+    const deptLabels = JSON.parse(document.getElementById('departmentChart').dataset.labels);
+    const deptData = JSON.parse(document.getElementById('departmentChart').dataset.data);
+
+    const centerTextPlugin = {
+        id: 'centerText',
+        afterDraw(chart) {
+            const {ctx, chartArea: {width, height}} = chart;
+            ctx.save();
+            ctx.font = `${Math.min(width, height) / 20}px sans-serif`;
+            ctx.fillStyle = 'black';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('Budget by Department', width / 2, height / 2);
+            ctx.restore();
+        }
+    };
+
+    const deptChart = new Chart(deptCtx, {
+        type: 'doughnut',
+        data: {
+            labels: deptLabels,
+            datasets: [{
+                data: deptData,
+                backgroundColor: generateColors(deptData.length),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '50%',
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: { boxWidth: 15, boxHeight: 15 }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return '₱' + context.raw.toLocaleString();
+                        }
+                    }
+                }
+            }
+        },
+        plugins: [centerTextPlugin]
+    });
+
+    // Region Chart
+    const regCtx = document.getElementById('regionChart').getContext('2d');
+    const regLabels = JSON.parse(document.getElementById('regionChart').dataset.labels);
+    const regData = JSON.parse(document.getElementById('regionChart').dataset.data);
+
+    const centerTextPlugin2 = {
+        id: 'centerText',
+        afterDraw(chart) {
+            const {ctx, chartArea: {width, height}} = chart;
+            ctx.save();
+            ctx.font = `${Math.min(width, height) / 20}px sans-serif`;
+            ctx.fillStyle = 'black';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('Budget by Region', width / 2, height / 2);
+            ctx.restore();
+        }
+    };
+
+    const regChart = new Chart(regCtx, {
+        type: 'doughnut',
+        data: {
+            labels: regLabels,
+            datasets: [{
+                data: regData,
+                backgroundColor: generateColors(regData.length),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '50%',
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: { boxWidth: 15, boxHeight: 15 }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return '₱' + context.raw.toLocaleString();
+                        }
+                    }
+                }
+            }
+        },
+        plugins: [centerTextPlugin2]
+    });
+
+    function generateColors(count) {
+        const colors = [];
+        for (let i = 0; i < count; i++) {
+            // Vary hue around the base teal color (168°) but stay within teal range (150° to 190°)
+            const hueVariation = -20 + (i / count) * 40; // varies from -20° to +20° from base
+            const hue = 168 + hueVariation;
+            const lightness = 25 + (i % 5) * 15; // varies 25%, 40%, 55%, 70%, 85% for more distinction
+            const saturation = 70 + (i % 3) * 10; // varies 70%, 80%, 90% saturation
+            colors.push(`hsl(${hue}, ${saturation}%, ${lightness}%)`);
+        }
+        return colors;
+    }
+
+    // Year selector functionality
+    const yearSelect = document.getElementById('yearSelect');
+    if (yearSelect) {
+        yearSelect.addEventListener('change', function() {
+            const year = this.value;
+            window.location.href = `?year=${year}`;
+        });
+    }
+});
+</script>
+
+{% endblock %}

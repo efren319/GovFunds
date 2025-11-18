@@ -1,0 +1,78 @@
+<!-- templates/project_detail.html -->
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ project['name'] }}</h2>
+<p class="muted">{{ project['department'] }} — {{ project['region'] or 'N/A' }}</p>
+<p>{{ project['description'] }}</p>
+
+<ul class="detail-list">
+  <li>Allocated Budget: ₱{{ "{:,.2f}".format(project['allocated_budget'] or 0) }}</li>
+  <li>Spent: ₱{{ "{:,.2f}".format(project['spent'] or 0) }}</li>
+  <li>Remaining: ₱{{ "{:,.2f}".format((project['allocated_budget'] or 0) - (project['spent'] or 0)) }}</li>
+  <li>Status: {{ project['status'] }}</li>
+  <li>Start: {{ project['start_date'] or 'N/A' }}</li>
+  <li>End: {{ project['end_date'] or 'N/A' }}</li>
+</ul>
+
+<!-- Report Submission Form -->
+<div class="report-form-section">
+  <h3>Submit a Report</h3>
+  <p class="form-description">Have feedback or found an issue with this project? Let us know.</p>
+  <form method="post" action="{{ url_for('feedback') }}" class="form report-form">
+    <input type="hidden" name="action" value="submit_report">
+    <input type="hidden" name="project_id" value="{{ project['id'] }}">
+    
+    <div class="form-row">
+      <input type="text" name="reporter_name" placeholder="Your name (optional)">
+      <input type="email" name="reporter_email" placeholder="Your email (optional)">
+    </div>
+    
+    <div class="form-row">
+      <input type="text" name="report_subject" placeholder="Report subject" required>
+      <select name="report_type" required>
+        <option value="">Select report type</option>
+        <option value="General">General Feedback</option>
+        <option value="Issue">Issue/Problem</option>
+        <option value="Concern">Concern</option>
+        <option value="Suggestion">Suggestion</option>
+      </select>
+    </div>
+    
+    <div class="form-row">
+      <textarea name="report_message" placeholder="Describe your report..." required></textarea>
+    </div>
+    
+    <div class="form-row">
+      <button type="submit" class="btn">Submit Report</button>
+    </div>
+  </form>
+</div>
+
+{% if reports %}
+<h3>Project Reports ({{ reports|length }})</h3>
+<div class="reports-section">
+  {% for report in reports %}
+  <div class="report-card {% if not report['is_resolved'] %}unresolved{% endif %}">
+    <div class="report-header">
+      <div>
+        <h4>{{ report['report_subject'] }}</h4>
+        <span class="report-type report-type-{{ report['report_type']|lower }}">{{ report['report_type'] }}</span>
+      </div>
+      {% if not report['is_resolved'] %}
+      <span class="unresolved-badge">UNRESOLVED</span>
+      {% else %}
+      <span class="resolved-badge">RESOLVED</span>
+      {% endif %}
+    </div>
+    <p class="report-message">{{ report['report_message'] }}</p>
+    <div class="report-meta">
+      <span class="report-reporter">{{ report['reporter_name'] or 'Anonymous' }}</span>
+      <span class="report-date">{{ report['created_at'] }}</span>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<a class="btn" href="{{ url_for('projects') }}">Back to Projects</a>
+{% endblock %}

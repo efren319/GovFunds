@@ -1,0 +1,44 @@
+<!-- templates/home.html -->
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <h1><b c>Gov</b>Funds <br>Transparency Portal</h1>
+  <p>Promoting government transparency through open access to fund and project data.</p>
+  <div class="hero-cta">
+    <a class="btn" href="{{ url_for('projects') }}">View Projects</a>
+    <a class="btn outline" href="{{ url_for('budget') }}">Track Spending</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-value">₱{{ "{:,.2f}".format(total_alloc) }}</div>
+      <div class="stat-label">Total Funds Tracked</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">{{ projects_count }}</div>
+      <div class="stat-label">Projects Listed</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">₱{{ "{:,.2f}".format(total_spent) }}</div>
+      <div class="stat-label">Total Spent</div>
+    </div>
+  </div>
+</section>
+
+<section class="quick-cards">
+  <div class="card">
+    <h3>Budget Overview</h3>
+    <p>Explore how funds are allocated across departments.</p>
+    <a href="{{ url_for('budget') }}" class="small-link">View Budget</a>
+  </div>
+  <div class="card">
+    <h3>Spending Tracker</h3>
+    <p>Track project spending vs allocated budgets.</p>
+    <a href="{{ url_for('budget') }}" class="small-link">Track Spending</a>
+  </div>
+  <div class="card">
+    <h3>Citizen Feedback</h3>
+    <p>Submit concerns or suggestions about projects.</p>
+    <a href="{{ url_for('feedback') }}" class="small-link">Send Feedback</a>
+  </div>
+</section>
+{% endblock %}
