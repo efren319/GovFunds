@@ -17,6 +17,11 @@ def seed_data():
     
     with app.app_context():
         try:
+            # Create all tables if they don't exist
+            print("Creating database tables...")
+            db.create_all()
+            print("✓ Tables created/verified")
+            
             # Clear existing data (optional)
             print("Clearing existing data...")
             Project.query.delete()
