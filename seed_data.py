@@ -36,7 +36,7 @@ def seed_data():
             projects = [
                 Project(
                     name='Road Rehabilitation - Barangay A',
-                    department='Department of Public Works and Highways',
+                    department='Road Infrastructure',
                     description='Rehab of 3km barangay road',
                     allocated_budget=5000000,
                     spent=3500000,
@@ -46,9 +46,9 @@ def seed_data():
                     end_date=None
                 ),
                 Project(
-                    name='School Building Construction',
-                    department='Department of Education',
-                    description='2-classroom building',
+                    name='Bridge Construction Project',
+                    department='Bridge Infrastructure',
+                    description='New bridge construction across river',
                     allocated_budget=2000000,
                     spent=2000000,
                     status='Completed',
@@ -57,9 +57,9 @@ def seed_data():
                     end_date='2024-04-15'
                 ),
                 Project(
-                    name='Health Center Upgrade',
-                    department='Department of Health',
-                    description='Medical equipment and building upgrade',
+                    name='Flood Control System',
+                    department='Flood Control and Drainage',
+                    description='Installation of flood control infrastructure',
                     allocated_budget=3000000,
                     spent=1500000,
                     status='Ongoing',
@@ -69,7 +69,7 @@ def seed_data():
                 ),
                 Project(
                     name='Irrigation System Project',
-                    department='Department of Agriculture',
+                    department='Water Resources and Irrigation',
                     description='Small-scale irrigation',
                     allocated_budget=1500000,
                     spent=200000,
@@ -173,75 +173,40 @@ def seed_data():
             # Department Budget Data for 2023
             print("Inserting department budget data...")
             dept_budgets_2023 = [
-                DepartmentBudget(department='Department of Education', year=2023, budget=678317321000),
-                DepartmentBudget(department='Department of Health', year=2023, budget=209624216000),
-                DepartmentBudget(department='Department of Public Works and Highways', year=2023, budget=893121040000),
-                DepartmentBudget(department='Department of the Interior and Local Government', year=2023, budget=253404249000),
-                DepartmentBudget(department='Department of National Defense', year=2023, budget=204566332000),
-                DepartmentBudget(department='Department of Social Welfare and Development', year=2023, budget=199256638000),
-                DepartmentBudget(department='Department of Agriculture', year=2023, budget=98864397000),
-                DepartmentBudget(department='Department of Budget and Management', year=2023, budget=1737629000),
-                DepartmentBudget(department='Department of Justice', year=2023, budget=36228754000),
-                DepartmentBudget(department='Department of Labor and Employment', year=2023, budget=46631922000),
-                DepartmentBudget(department='Department of Energy', year=2023, budget=1320735000),
-                DepartmentBudget(department='Department of Finance', year=2023, budget=23927302000),
-                DepartmentBudget(department='Department of Foreign Affairs', year=2023, budget=20621463000),
-                DepartmentBudget(department='Department of Information and Communications Technology', year=2023, budget=8289778000),
-                DepartmentBudget(department='Department of Tourism', year=2023, budget=3731984000),
-                DepartmentBudget(department='Department of Trade and Industry', year=2023, budget=6327029000),
-                DepartmentBudget(department='Department of Transportation', year=2023, budget=105530385000),
-                DepartmentBudget(department='National Economic and Development Authority', year=2023, budget=12961084000),
-                DepartmentBudget(department='Civil Service Commission', year=2023, budget=2045591000),
-                DepartmentBudget(department='Commission on Audit', year=2023, budget=13318049000),
-                DepartmentBudget(department='Commission on Elections', year=2023, budget=5737340000),
-                DepartmentBudget(department='Office of the Ombudsman', year=2023, budget=4721331000),
-                DepartmentBudget(department='Commission on Human Rights', year=2023, budget=993921000),
-                DepartmentBudget(department='Special Purpose Funds', year=2023, budget=1825624983000),
+                DepartmentBudget(department='Road Infrastructure', year=2023, budget=116252873000),
+                DepartmentBudget(department='Bridge Infrastructure', year=2023, budget=29333447000),
+                DepartmentBudget(department='Flood Control and Drainage', year=2023, budget=182989695000),
+                DepartmentBudget(department='Public Buildings', year=2023, budget=79409974000),
+                DepartmentBudget(department='Water Resources and Irrigation', year=2023, budget=15413692000),
+                DepartmentBudget(department='Special Infrastructure Projects', year=2023, budget=388286983000),
+                DepartmentBudget(department='Disaster Response and Rehabilitation', year=2023, budget=11000000000),
+                DepartmentBudget(department='Local Infrastructure Support', year=2023, budget=37285405000),
             ]
             db.session.add_all(dept_budgets_2023)
             
             # Department Budget Data for 2024
             dept_budgets_2024 = [
-                DepartmentBudget(department='Department of Education', year=2024, budget=717663478000),
-                DepartmentBudget(department='Department of Health', year=2024, budget=241602813000),
-                DepartmentBudget(department='Department of Public Works and Highways', year=2024, budget=996791684000),
-                DepartmentBudget(department='Department of the Interior and Local Government', year=2024, budget=263649999000),
-                DepartmentBudget(department='Department of National Defense', year=2024, budget=238356544000),
-                DepartmentBudget(department='Department of Social Welfare and Development', year=2024, budget=247848341000),
-                DepartmentBudget(department='Department of Agriculture', year=2024, budget=111687758000),
-                DepartmentBudget(department='Department of Budget and Management', year=2024, budget=2501145000),
-                DepartmentBudget(department='Department of Justice', year=2024, budget=36228754000),
-                DepartmentBudget(department='Department of Labor and Employment', year=2024, budget=61268468000),
-                DepartmentBudget(department='Department of Energy', year=2024, budget=1662160000),
-                DepartmentBudget(department='Department of Finance', year=2024, budget=23927302000),
-                DepartmentBudget(department='Department of Foreign Affairs', year=2024, budget=24591198000),
-                DepartmentBudget(department='Department of Tourism', year=2024, budget=3439715000),
-                DepartmentBudget(department='Department of Trade and Industry', year=2024, budget=8638218000),
-                DepartmentBudget(department='Department of Transportation', year=2024, budget=73330669000),
-                DepartmentBudget(department='Special Purpose Funds', year=2024, budget=2169133613000),
+                DepartmentBudget(department='Road Infrastructure', year=2024, budget=132328352000),
+                DepartmentBudget(department='Bridge Infrastructure', year=2024, budget=24755275000),
+                DepartmentBudget(department='Flood Control and Drainage', year=2024, budget=244577911000),
+                DepartmentBudget(department='Public Buildings', year=2024, budget=100214102000),
+                DepartmentBudget(department='Water Resources and Irrigation', year=2024, budget=74903429000),
+                DepartmentBudget(department='Special Infrastructure Projects', year=2024, budget=410991162000),
+                DepartmentBudget(department='Disaster Response and Rehabilitation', year=2024, budget=1000000000),
+                DepartmentBudget(department='Local Infrastructure Support', year=2024, budget=39343250000),
             ]
             db.session.add_all(dept_budgets_2024)
             
             # Department Budget Data for 2025
             dept_budgets_2025 = [
-                DepartmentBudget(department='Department of Education', year=2025, budget=793177297000),
-                DepartmentBudget(department='Department of Health', year=2025, budget=223188973000),
-                DepartmentBudget(department='Department of Public Works and Highways', year=2025, budget=900000000000),
-                DepartmentBudget(department='Department of the Interior and Local Government', year=2025, budget=281320865000),
-                DepartmentBudget(department='Department of National Defense', year=2025, budget=258164910000),
-                DepartmentBudget(department='Department of Social Welfare and Development', year=2025, budget=230057270000),
-                DepartmentBudget(department='Department of Agriculture', year=2025, budget=129001585000),
-                DepartmentBudget(department='Department of Budget and Management', year=2025, budget=3191835000),
-                DepartmentBudget(department='Department of Justice', year=2025, budget=40584630000),
-                DepartmentBudget(department='Department of Labor and Employment', year=2025, budget=45833958000),
-                DepartmentBudget(department='Department of Migrant Workers', year=2025, budget=8503912000),
-                DepartmentBudget(department='National Economic and Development Authority', year=2025, budget=12575395000),
-                DepartmentBudget(department='Department of Transportation', year=2025, budget=180893888000),
-                DepartmentBudget(department='Department of Trade and Industry', year=2025, budget=8598332000),
-                DepartmentBudget(department='Commission on Audit', year=2025, budget=13417340000),
-                DepartmentBudget(department='Commission on Elections', year=2025, budget=35470671000),
-                DepartmentBudget(department='Office of the Ombudsman', year=2025, budget=5824154000),
-                DepartmentBudget(department='Special Purpose Funds', year=2025, budget=2740481084000),
+                DepartmentBudget(department='Road Infrastructure', year=2025, budget=541980000000),
+                DepartmentBudget(department='Bridge Infrastructure', year=2025, budget=38000000000),
+                DepartmentBudget(department='Flood Control and Drainage', year=2025, budget=257060000000),
+                DepartmentBudget(department='Public Buildings', year=2025, budget=113522058000),
+                DepartmentBudget(department='Water Resources and Irrigation', year=2025, budget=42570000000),
+                DepartmentBudget(department='Special Infrastructure Projects', year=2025, budget=330000000000),
+                DepartmentBudget(department='Disaster Response and Rehabilitation', year=2025, budget=10000000000),
+                DepartmentBudget(department='Local Infrastructure Support', year=2025, budget=25000000000),
             ]
             db.session.add_all(dept_budgets_2025)
             db.session.commit()

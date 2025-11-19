@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ctx.fillStyle = 'black';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillText('Budget by Department', width / 2, height / 2);
+                ctx.fillText('Budget by Category', width / 2, height / 2);
                 ctx.restore();
             }
         };
