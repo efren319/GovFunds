@@ -9,7 +9,7 @@
   <div class="form-row">
     <input name="name" placeholder="Project name" required>
     <select name="department" required>
-      <option value="">Select Department</option>
+      <option value="">Select Infrastructure Category</option>
       {% for dept in departments %}
       <option value="{{ dept }}">{{ dept }}</option>
       {% endfor %}
@@ -69,7 +69,7 @@
 
 <h3>Recent Projects</h3>
 <table class="data-table">
-  <thead><tr><th>ID</th><th>Name</th><th>Dept</th><th>Allocated</th><th>Spent</th><th>Status</th><th>Reports</th></tr></thead>
+  <thead><tr><th>ID</th><th>Name</th><th>Category</th><th>Allocated</th><th>Spent</th><th>Status</th><th>Reports</th></tr></thead>
   <tbody>
     {% for p in projects %}
     <tr>
