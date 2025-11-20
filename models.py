@@ -25,7 +25,7 @@ class User(db.Model):
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)  # Unique ID for each project
     name = db.Column(db.String(100), nullable=False)  # Project name, cannot be empty
-    department = db.Column(db.String(100), nullable=False)  # Department managing project
+    project_sector = db.Column(db.String(100), nullable=False)  # Project sector managing project
     description = db.Column(db.Text)  # Optional description of the project
     allocated_budget = db.Column(db.Float, default=0)  # Budget allocated
     spent = db.Column(db.Float, default=0)  # Amount spent so far
@@ -77,11 +77,11 @@ class RegionBudget(db.Model):
     __table_args__ = (db.UniqueConstraint('region', 'year', name='unique_region_year'),)
 
 
-# ---------------- DEPARTMENT BUDGET TABLE ----------------
-# This table stores budget allocations for each department
-class DepartmentBudget(db.Model):
+# ---------------- PROJECT SECTOR BUDGET TABLE ----------------
+# This table stores budget allocations for each project sector
+class ProjectSectorBudget(db.Model):
     id = db.Column(db.Integer, primary_key=True)  # Unique ID
-    department = db.Column(db.String(100), nullable=False)  # Department name, cannot be empty
+    sector = db.Column(db.String(100), nullable=False)  # Project sector name, cannot be empty
     year = db.Column(db.Integer, nullable=False)  # Budget year
     budget = db.Column(db.Float, nullable=False)  # Amount allocated for that year
     

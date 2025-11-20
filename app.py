@@ -5,7 +5,7 @@ import os
 from functools import wraps
 import hashlib
 from dotenv import load_dotenv
-from models import db, User, Project, Feedback, ProjectReport, RegionBudget, DepartmentBudget, AnnualBudget
+from models import db, User, Project, Feedback, ProjectReport, RegionBudget, ProjectSectorBudget, AnnualBudget
 
 # Load environment variables from .env file
 load_dotenv()
@@ -34,6 +34,15 @@ def check_admin_access():
         if 'admin_user' not in session or not session.get('admin_user'):
             flash('Please log in to access the admin panel.', 'warning')
             return redirect(url_for('login'))
+
+@app.after_request
+def no_cache(response):
+    """Disable caching for static files in development"""
+    if os.getenv('FLASK_ENV') != 'production':
+        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = '0'
+    return response
 
 # SQLAlchemy Configuration for PostgreSQL
 DB_URI = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
@@ -168,10 +177,10 @@ def budget():
         if years and selected_year not in years:
             selected_year = years[0]
 
-        # Get department budget data
-        department_budgets = DepartmentBudget.query.filter_by(year=selected_year).order_by(DepartmentBudget.budget.desc()).all()
-        dept_labels = [d.department for d in department_budgets]
-        dept_data = [d.budget for d in department_budgets]
+        # Get project sector budget data
+        sector_budgets = ProjectSectorBudget.query.filter_by(year=selected_year).order_by(ProjectSectorBudget.budget.desc()).all()
+        dept_labels = [d.sector for d in sector_budgets]
+        dept_data = [d.budget for d in sector_budgets]
 
         # Get regional budget data
         regional_budgets = RegionBudget.query.filter_by(year=selected_year).order_by(RegionBudget.region).all()
@@ -182,10 +191,10 @@ def budget():
         annual_budget_row = AnnualBudget.query.filter_by(year=selected_year).first()
         annual_budget_obj = annual_budget_row.total_budget if annual_budget_row else 0
 
-        # Convert department_budgets to dictionaries for JSON serialization
-        department_budgets_list = [
-            {'department': d.department, 'budget': d.budget, 'year': d.year}
-            for d in department_budgets
+        # Convert sector_budgets to dictionaries for JSON serialization
+        sector_budgets_list = [
+            {'sector': d.sector, 'budget': d.budget, 'year': d.year}
+            for d in sector_budgets
         ]
 
         return render_template(
@@ -198,13 +207,13 @@ def budget():
             selected_year=selected_year,
             available_years=years,
             annual_budget=annual_budget_obj,
-            department_budgets_list=department_budgets_list
+            sector_budgets_list=sector_budgets_list
         )
     except Exception as e:
         print(f"Error in budget route: {e}")
         import traceback
         traceback.print_exc()
-        return render_template('budget.html', projects=[], dept_labels=[], dept_data=[], region_labels=[], region_data=[], selected_year=2025, available_years=[], annual_budget=0, department_budgets_list=[])
+        return render_template('budget.html', projects=[], dept_labels=[], dept_data=[], region_labels=[], region_data=[], selected_year=2025, available_years=[], annual_budget=0, sector_budgets_list=[])
 
 
 # API endpoint for budget data (used by Chart.js)
@@ -212,12 +221,12 @@ def budget():
 def budget_data():
     try:
         result = db.session.query(
-            Project.department,
+            Project.project_sector,
             func.sum(Project.allocated_budget).label('allocated'),
             func.sum(Project.spent).label('spent')
-        ).group_by(Project.department).all()
-        
-        rows = [{'department': row[0], 'allocated': row[1] or 0, 'spent': row[2] or 0} for row in result]
+        ).group_by(Project.project_sector).all()
+
+        rows = [{'sector': row[0], 'allocated': row[1] or 0, 'spent': row[2] or 0} for row in result]
         return jsonify(rows)
     except Exception as e:
         print(f"Error in budget_data: {e}")
@@ -250,6 +259,43 @@ def project_detail(pid):
         print(f"Error in project_detail: {e}")
         flash('Error loading project', 'danger')
         return redirect(url_for('projects'))
+
+# Edit project (admin only)
+@app.route('/project/<int:pid>/edit', methods=['GET', 'POST'])
+def edit_project(pid):
+    if 'admin_user' not in session or not session.get('admin_user'):
+        flash('You must be logged in as admin to edit projects', 'danger')
+        return redirect(url_for('login'))
+    
+    try:
+        project = Project.query.get(pid)
+        if not project:
+            flash('Project not found', 'warning')
+            return redirect(url_for('projects'))
+        
+        if request.method == 'POST':
+            project.name = request.form.get('name', '').strip()
+            project.project_sector = request.form.get('project_sector', '').strip()
+            project.region = request.form.get('region', '').strip()
+            project.status = request.form.get('status', 'Planned')
+            project.allocated_budget = float(request.form.get('allocated_budget') or 0)
+            project.spent = float(request.form.get('spent') or 0)
+            project.description = request.form.get('description', '').strip()
+            
+            db.session.commit()
+            flash('Project updated successfully', 'success')
+            return redirect(url_for('project_detail', pid=pid))
+        
+        # Get all regions for the dropdown
+        regions = db.session.query(RegionBudget.region).distinct().order_by(RegionBudget.region).all()
+        regions = [r[0] for r in regions]
+        
+        return render_template('edit_project.html', project=project, regions=regions)
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error in edit_project: {e}")
+        flash('Error updating project', 'danger')
+        return redirect(url_for('project_detail', pid=pid))
 
 # Feedback form
 @app.route('/feedback', methods=['GET', 'POST'])
@@ -359,7 +405,7 @@ def admin():
         if action == 'add_project':
             try:
                 name = request.form.get('name','').strip()
-                dept = request.form.get('department','').strip()
+                sector = request.form.get('project_sector','').strip()
                 desc = request.form.get('description','').strip()
                 allocated = float(request.form.get('allocated_budget') or 0)
                 spent = float(request.form.get('spent') or 0)
@@ -368,7 +414,7 @@ def admin():
                 
                 new_project = Project(
                     name=name,
-                    department=dept,
+                    project_sector=sector,
                     description=desc,
                     allocated_budget=allocated,
                     spent=spent,
@@ -398,7 +444,7 @@ def admin():
             project_dict = {
                 'id': project.id,
                 'name': project.name,
-                'department': project.department,
+                'project_sector': project.project_sector,
                 'description': project.description,
                 'allocated_budget': project.allocated_budget,
                 'spent': project.spent,
@@ -429,9 +475,17 @@ def admin():
             }
             reports_with_project_names.append(report_dict)
         
-        # Get all unique departments
-        departments = db.session.query(DepartmentBudget.department).distinct().order_by(DepartmentBudget.department).all()
-        departments = [d[0] for d in departments]
+        # Hardcoded infrastructure departments
+        departments = [
+            'Road Infrastructure',
+            'Bridge Infrastructure',
+            'Flood Control and Drainage',
+            'Public Buildings',
+            'Water Resources and Irrigation',
+            'Special Infrastructure Projects',
+            'Disaster Response and Rehabilitation',
+            'Local Infrastructure Support'
+        ]
         
         # Get all unique regions
         regions = db.session.query(RegionBudget.region).distinct().order_by(RegionBudget.region).all()

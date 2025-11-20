@@ -1,18 +1,21 @@
 <!-- templates/admin.html -->
 {% extends "base.html" %}
 {% block content %}
-<h2>Admin — Add Project (Demo)</h2>
-<p>Simple admin form for demo purposes. Protect with authentication in production.</p>
-
+<h2>Add Project</h2>
 <form method="post" class="form admin-form">
   <input type="hidden" name="action" value="add_project">
   <div class="form-row">
     <input name="name" placeholder="Project name" required>
-    <select name="department" required>
-      <option value="">Select Department</option>
-      {% for dept in departments %}
-      <option value="{{ dept }}">{{ dept }}</option>
-      {% endfor %}
+    <select name="project_sector" required>
+      <option value="">Select Project Sector</option>
+      <option value="Road Infrastructure">Road Infrastructure</option>
+      <option value="Bridge Infrastructure">Bridge Infrastructure</option>
+      <option value="Flood Control and Drainage">Flood Control and Drainage</option>
+      <option value="Public Buildings">Public Buildings</option>
+      <option value="Water Resources and Irrigation">Water Resources and Irrigation</option>
+      <option value="Special Infrastructure Projects">Special Infrastructure Projects</option>
+      <option value="Disaster Response and Rehabilitation">Disaster Response and Rehabilitation</option>
+      <option value="Local Infrastructure Support">Local Infrastructure Support</option>
     </select>
   </div>
   <div class="form-row">
@@ -60,7 +63,7 @@
       <span>{{ report['created_at'] }}</span>
     </div>
     <form method="post" action="{{ url_for('resolve_report', report_id=report['id']) }}" style="margin-top: 1rem;">
-      <button type="submit" class="btn" style="background: #28a745;">Mark as Resolved</button>
+      <button type="submit" class="resolve">Mark as Resolved</button>
     </form>
   </div>
   {% endfor %}
@@ -69,13 +72,13 @@
 
 <h3>Recent Projects</h3>
 <table class="data-table">
-  <thead><tr><th>ID</th><th>Name</th><th>Dept</th><th>Allocated</th><th>Spent</th><th>Status</th><th>Reports</th></tr></thead>
+  <thead><tr><th>ID</th><th>Name</th><th>Sector</th><th>Allocated</th><th>Spent</th><th>Status</th><th>Reports</th></tr></thead>
   <tbody>
     {% for p in projects %}
     <tr>
       <td>{{ p['id'] }}</td>
       <td>{{ p['name'] }}</td>
-      <td>{{ p['department'] }}</td>
+      <td>{{ p['project_sector'] }}</td>
       <td>₱{{ "{:,.2f}".format(p['allocated_budget'] or 0) }}</td>
       <td>₱{{ "{:,.2f}".format(p['spent'] or 0) }}</td>
       <td>{{ p['status'] }}</td>

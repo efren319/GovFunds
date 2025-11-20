@@ -1,0 +1,69 @@
+<!-- templates/edit_project.html -->
+{% extends "base.html" %}
+{% block content %}
+<h2>Edit Project</h2>
+
+<form method="post" class="form" style="max-width: 600px;">
+  <div class="form-row">
+    <div>
+      <label>Project Name</label>
+      <input name="name" type="text" value="{{ project.name }}" required>
+    </div>
+    <div>
+      <label>Project Sector</label>
+      <select name="project_sector" required>
+        <option value="">Select Project Sector</option>
+        <option value="Road Infrastructure" {% if project.project_sector == 'Road Infrastructure' %}selected{% endif %}>Road Infrastructure</option>
+        <option value="Bridge Infrastructure" {% if project.project_sector == 'Bridge Infrastructure' %}selected{% endif %}>Bridge Infrastructure</option>
+        <option value="Flood Control and Drainage" {% if project.project_sector == 'Flood Control and Drainage' %}selected{% endif %}>Flood Control and Drainage</option>
+        <option value="Public Buildings" {% if project.project_sector == 'Public Buildings' %}selected{% endif %}>Public Buildings</option>
+        <option value="Water Resources and Irrigation" {% if project.project_sector == 'Water Resources and Irrigation' %}selected{% endif %}>Water Resources and Irrigation</option>
+        <option value="Special Infrastructure Projects" {% if project.project_sector == 'Special Infrastructure Projects' %}selected{% endif %}>Special Infrastructure Projects</option>
+        <option value="Disaster Response and Rehabilitation" {% if project.project_sector == 'Disaster Response and Rehabilitation' %}selected{% endif %}>Disaster Response and Rehabilitation</option>
+        <option value="Local Infrastructure Support" {% if project.project_sector == 'Local Infrastructure Support' %}selected{% endif %}>Local Infrastructure Support</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div>
+      <label>Region</label>
+      <select name="region" required>
+        <option value="">Select Region</option>
+        {% for region in regions %}
+        <option value="{{ region }}" {% if project.region == region %}selected{% endif %}>{{ region }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label>Status</label>
+      <select name="status">
+        <option value="Planned" {% if project.status == 'Planned' %}selected{% endif %}>Planned</option>
+        <option value="Ongoing" {% if project.status == 'Ongoing' %}selected{% endif %}>Ongoing</option>
+        <option value="Completed" {% if project.status == 'Completed' %}selected{% endif %}>Completed</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div>
+      <label>Allocated Budget</label>
+      <input name="allocated_budget" type="number" step="0.01" value="{{ project.allocated_budget or 0 }}" required>
+    </div>
+    <div>
+      <label>Spent Amount</label>
+      <input name="spent" type="number" step="0.01" value="{{ project.spent or 0 }}" required>
+    </div>
+  </div>
+
+  <div style="margin-bottom: 0.6rem;">
+    <label style="display: block; font-weight: 600; font-size: 0.95rem; color: #333; margin-bottom: 0.4rem;">Description</label>
+    <textarea name="description" rows="4" style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 6px; font-family: 'Inter', sans-serif; resize: vertical;">{{ project.description or '' }}</textarea>
+  </div>
+
+  <div class="form-row" style="gap: 1rem;">
+    <button class="btn" type="submit">Save Changes</button>
+    <a href="{{ url_for('projects') }}" class="btn" style="background: #666; color: #fff; text-align: center;">Cancel</a>
+  </div>
+</form>
+{% endblock %}

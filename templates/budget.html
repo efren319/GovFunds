@@ -11,9 +11,9 @@
       <p>Year {{ selected_year }}</p>
     </div>
     
-    <!-- Right Side: Rotating Department -->
+    <!-- Right Side: Rotating Sector -->
     <div class="annual-budget-right">
-      <p>Top Department</p>
+      <p>Top Sector</p>
       <p id="deptName">-</p>
       <p id="deptBudget">-</p>
     </div>
@@ -81,7 +81,7 @@
 
 <div class="charts-container">
   <div class="chart-card">
-    <h2>Budget by Department</h2>
+    <h2>Budget by Project Sector</h2>
     <div class="chart-with-table">
       <div class="chart-wrapper">
         <canvas id="departmentChart"
@@ -90,7 +90,7 @@
       </div>
       <div class="chart-table">
         <div class="chart-table-header">
-          <div class="chart-table-col">Department</div>
+          <div class="chart-table-col">Sector</div>
           <div class="chart-table-col">Amount</div>
           <div class="chart-table-col">Percentage</div>
         </div>
@@ -126,8 +126,8 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="{{ url_for('static', filename='carousel.js') }}"></script>
 <script>
-  // Department data from server - for Top Department carousel
-  const departmentsList = {{ department_budgets_list|tojson }};
+  // Sector data from server - for Top Sector carousel
+  const departmentsList = {{ sector_budgets_list|tojson }};
 </script>
 <script src="{{ url_for('static', filename='budget.js') }}"></script>
 

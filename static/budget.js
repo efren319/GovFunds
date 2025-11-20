@@ -5,9 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Wait a moment for departmentsList to be available from template
     setTimeout(() => {
         if (typeof initDepartmentCarousel === 'function' && typeof departmentsList !== 'undefined' && departmentsList.length > 0) {
-            // Transform data if needed - departmentsList contains objects with department and budget properties
+            // Transform data if needed - departmentsList contains objects with sector and budget properties
             const depts = departmentsList.map(d => ({
-                name: d.department,
+                name: d.sector,
                 budget: d.budget
             }));
             console.log('Initializing carousel with:', depts);
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ctx.fillStyle = 'black';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillText('Budget by Department', width / 2, height / 2);
+                ctx.fillText('Budget by Sector', width / 2, height / 2);
                 ctx.restore();
             }
         };
