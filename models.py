@@ -1,6 +1,4 @@
-# models.py
-# ---------------- IMPORTS ----------------
-# These tools help us define tables for our database and track time
+
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 

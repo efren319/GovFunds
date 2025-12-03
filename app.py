@@ -63,30 +63,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Initialize database
 db.init_app(app)
 
-# Health check endpoint for Railway
-@app.route('/health')
-def health():
-    """Health check endpoint for Railway"""
-    try:
-        # Test database connection
-        db.session.execute(text('SELECT 1'))
-        
-        # Count records
-        project_count = Project.query.count()
-        feedback_count = Feedback.query.count()
-        region_count = RegionBudget.query.count()
-        
-        return {
-            'status': 'healthy',
-            'database': 'connected',
-            'projects': project_count,
-            'feedback': feedback_count,
-            'regions': region_count
-        }, 200
-    except Exception as e:
-        return {'status': 'unhealthy', 'error': str(e)}, 503
-
-# Authentication decorator (for resolve-report)
+# Authentication decorator
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
