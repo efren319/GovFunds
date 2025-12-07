@@ -387,11 +387,42 @@ nav a.logout-link:hover {
   background: #fff;
   background-size: cover;
   background-position: center;
-  overflow: hidden;
 }
 
-.card.budget-card::after,
-.card.spending-card::after,
+.card.budget-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('/static/images/budget_card.webp');
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+  filter: blur(0px);
+}
+
+.card.spending-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('/static/images/spending_card.webp');
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+  filter: blur(0px);
+}
+
 .card.feedback-card::after {
   content: '';
   position: absolute;
@@ -399,24 +430,14 @@ nav a.logout-link:hover {
   left: 0;
   right: 0;
   bottom: 0;
+  background-image: url('/static/images/feedback_card.webp');
   background-size: cover;
   background-position: center;
+  border-radius: 8px;
   z-index: 0;
   opacity: 0;
   transition: opacity 0.3s ease, filter 0.3s ease;
   filter: blur(0px);
-}
-
-.card.budget-card::after {
-  background-image: url('/static/images/budget_card.webp');
-}
-
-.card.spending-card::after {
-  background-image: url('/static/images/spending_card.webp');
-}
-
-.card.feedback-card::after {
-  background-image: url('/static/images/feedback_card.webp');
 }
 
 .card h3,
