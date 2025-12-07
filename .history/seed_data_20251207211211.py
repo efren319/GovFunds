@@ -1,3 +1,8 @@
+#!/usr/bin/env python3
+"""
+Script to insert sample data into the GovFunds database.
+Run this after the app is deployed: python seed_data.py
+"""
 
 import os
 from dotenv import load_dotenv
