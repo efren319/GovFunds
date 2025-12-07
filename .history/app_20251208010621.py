@@ -1,9 +1,14 @@
 # app.py
-from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, session
+from flask import Flask, render_template, g, request, redirect, url_for, jsonify, flash, session
 from sqlalchemy import func, text  # type: ignore
+import os
 from functools import wraps
 import hashlib
+from dotenv import load_dotenv
 from models import db, User, Project, Feedback, ProjectReport, RegionBudget, ProjectSectorBudget, AnnualBudget
+
+# Load environment variables from .env file
+load_dotenv()
 
 # PostgreSQL Configuration for Local Development
 DB_USER = 'postgres'

@@ -1,9 +1,14 @@
 # app.py
-from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, session
+from flask import Flask, render_template, g, request, redirect, url_for, jsonify, flash, session
 from sqlalchemy import func, text  # type: ignore
+import os
 from functools import wraps
 import hashlib
+from dotenv import load_dotenv
 from models import db, User, Project, Feedback, ProjectReport, RegionBudget, ProjectSectorBudget, AnnualBudget
+
+# Load environment variables from .env file
+load_dotenv()
 
 # PostgreSQL Configuration for Local Development
 DB_USER = 'postgres'
@@ -79,9 +84,9 @@ def login_required(f):
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
-# Admin credentials
+# Admin credentials (in production, store in database with proper security)
 ADMIN_CREDENTIALS = {
-    'admin': hash_password('admin123'),
+    'admin': hash_password('admin123'),  # Change this in production!
     'staff': hash_password('staff123')
 }
 

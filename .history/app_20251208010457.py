@@ -1,16 +1,22 @@
 # app.py
-from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, session
+from flask import Flask, render_template, g, request, redirect, url_for, jsonify, flash, session
 from sqlalchemy import func, text  # type: ignore
+import os
 from functools import wraps
 import hashlib
+from dotenv import load_dotenv
 from models import db, User, Project, Feedback, ProjectReport, RegionBudget, ProjectSectorBudget, AnnualBudget
 
-# PostgreSQL Configuration for Local Development
-DB_USER = 'postgres'
-DB_PASSWORD = 'postgres'
-DB_HOST = 'localhost'
-DB_PORT = '5432'
-DB_NAME = 'govfunds'
+# Load environment variables from .env file
+load_dotenv()
+
+# PostgreSQL Configuration from environment variables
+# Default to localhost for development
+DB_USER = os.getenv('DB_USER', 'postgres')
+DB_PASSWORD = os.getenv('DB_PASSWORD', 'postgres')
+DB_HOST = os.getenv('DB_HOST', 'localhost')
+DB_PORT = os.getenv('DB_PORT', '5432')
+DB_NAME = os.getenv('DB_NAME', 'govfunds')
 
 app = Flask(__name__)
 app.secret_key = 'sikreto ni aldred'
@@ -79,9 +85,9 @@ def login_required(f):
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
-# Admin credentials
+# Admin credentials (in production, store in database with proper security)
 ADMIN_CREDENTIALS = {
-    'admin': hash_password('admin123'),
+    'admin': hash_password('admin123'),  # Change this in production!
     'staff': hash_password('staff123')
 }
 

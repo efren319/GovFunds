@@ -1,19 +1,26 @@
 # app.py
-from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, session
+from flask import Flask, render_template, g, request, redirect, url_for, jsonify, flash, session
 from sqlalchemy import func, text  # type: ignore
+import os
 from functools import wraps
 import hashlib
+from dotenv import load_dotenv
 from models import db, User, Project, Feedback, ProjectReport, RegionBudget, ProjectSectorBudget, AnnualBudget
 
-# PostgreSQL Configuration for Local Development
-DB_USER = 'postgres'
-DB_PASSWORD = 'postgres'
-DB_HOST = 'localhost'
-DB_PORT = '5432'
-DB_NAME = 'govfunds'
+# Load environment variables from .env file
+load_dotenv()
+
+# PostgreSQL Configuration from environment variables
+# Default to localhost for development
+DB_USER = os.getenv('DB_USER', 'postgres')
+DB_PASSWORD = os.getenv('DB_PASSWORD', 'postgres')
+DB_HOST = os.getenv('DB_HOST', 'localhost')
+DB_PORT = os.getenv('DB_PORT', '5432')
+DB_NAME = os.getenv('DB_NAME', 'govfunds')
 
 app = Flask(__name__)
-app.secret_key = 'sikreto ni aldred'
+app.secret_key = os.getenv('SECRET_KEY', 'sikreto ni aldred')  # Use env variable in production
+app.config['SESSION_COOKIE_SECURE'] = os.getenv('FLASK_ENV') == 'production'
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['PERMANENT_SESSION_LIFETIME'] = 86400  # 24 hours
 
@@ -27,6 +34,15 @@ def check_admin_access():
         if 'admin_user' not in session or not session.get('admin_user'):
             flash('Please log in to access the admin panel.', 'warning')
             return redirect(url_for('login'))
+
+@app.after_request
+def no_cache(response):
+    """Disable caching for static files in development"""
+    if os.getenv('FLASK_ENV') != 'production':
+        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = '0'
+    return response
 
 # SQLAlchemy Configuration for PostgreSQL
 DB_URI = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
@@ -79,9 +95,9 @@ def login_required(f):
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
-# Admin credentials
+# Admin credentials (in production, store in database with proper security)
 ADMIN_CREDENTIALS = {
-    'admin': hash_password('admin123'),
+    'admin': hash_password('admin123'),  # Change this in production!
     'staff': hash_password('staff123')
 }
 
@@ -485,4 +501,10 @@ if __name__ == '__main__':
         except Exception as e:
             print(f"Warning: Could not create tables: {e}")
     
-    app.run(host='127.0.0.1', port=5000, debug=True)
+    # Set debug mode based on environment
+    debug_mode = os.getenv('FLASK_ENV') != 'production'
+    
+    # Get PORT from environment (Railway provides this)
+    port = int(os.getenv('PORT', 5000))
+    
+    app.run(host='127.0.0.1', port=port, debug=debug_mode)
