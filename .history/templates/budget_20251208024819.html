@@ -126,7 +126,9 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="{{ url_for('static', filename='carousel.js') }}"></script>
 <script>
-  const departmentsList = JSON.parse('{{ sector_budgets_list|tojson|safe }}');
+  // Sector data from server - for Top Sector carousel
+  /* @jsx React.createElement */
+  const departmentsList = {{ sector_budgets_list|tojson }};
 </script>
 <script src="{{ url_for('static', filename='budget.js') }}"></script>
 

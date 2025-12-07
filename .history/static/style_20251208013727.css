@@ -387,6 +387,7 @@ nav a.logout-link:hover {
   background: #fff;
   background-size: cover;
   background-position: center;
+  overflow: hidden;
 }
 
 .card.budget-card::after,
@@ -400,7 +401,6 @@ nav a.logout-link:hover {
   bottom: 0;
   background-size: cover;
   background-position: center;
-  border-radius: 8px;
   z-index: 0;
   opacity: 0;
   transition: opacity 0.3s ease, filter 0.3s ease;
@@ -797,6 +797,121 @@ select {
   line-height: 1.6;
 }
 
+/* Team Profile Cards */
+.team-profile-wrapper {
+  padding: 2rem 0;
+}
+
+.team-profile-title {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.team-profile-subtitle {
+  text-align: center;
+  margin-bottom: 3rem;
+  color: #666;
+}
+
+.team-profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.profile-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 15px;
+  padding-bottom: 20px;
+  box-shadow: 0 0px 10px rgba(0, 0, 0, 0.281), inset 0 0 20px rgba(0, 20, 60, 0.2);
+}
+
+.profile-avatar {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.profile-avatar-image {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 20px;
+  object-fit: cover;
+  margin-bottom: 20px;
+}
+
+.profile-info {
+  margin-bottom: 15px;
+  margin-left: 10px;
+}
+
+.profile-name {
+  color: #1EC4B0;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 5px 0;
+}
+
+.profile-role {
+  color: #a0a0a0;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.profile-social {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.social-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-decoration: none;
+}
+
+.social-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.social-btn svg {
+  width: 30px;
+  height: 30px;
+  fill: white;
+}
+
+.social-btn.facebook {
+  background: linear-gradient(135deg, #1877f2 0%, #0d5cb8 100%);
+}
+
+.social-btn.instagram {
+  background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+
+.social-btn.email {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
 /* Content with Image Layout */
 .content-with-image {
   display: flex;
@@ -957,105 +1072,6 @@ select {
   border-radius: 8px;
   min-width: 200px;
   box-shadow: 0 4px 10px rgba(3, 3, 3, 0.03);
-}
-
-/* Team Members Section */
-.team-members {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin: 2rem 0;
-}
-
-.member-card {
-  background: #fff;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.member-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
-}
-
-.member-header {
-  background: var(--navy);
-  color: #fff;
-  padding: 1.5rem;
-}
-
-.member-header h3 {
-  margin: 0 0 0.5rem;
-  font-size: 1.2rem;
-  font-weight: 700;
-}
-
-.member-role {
-  margin: 0;
-  font-size: 0.9rem;
-  opacity: 0.9;
-}
-
-.member-details {
-  padding: 1.5rem;
-}
-
-.member-details p {
-  margin: 0 0 1rem;
-  color: #333;
-}
-
-.social-links {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.social-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  color: #fff;
-  font-weight: 600;
-  font-size: 0.75rem;
-}
-
-.social-icon span {
-  font-size: 0.65rem;
-}
-
-.social-icon.fb {
-  background: #1877F2;
-}
-
-.social-icon.fb:hover {
-  background: #165EE1;
-  transform: scale(1.1);
-}
-
-.social-icon.gmail {
-  background: #EA4335;
-}
-
-.social-icon.gmail:hover {
-  background: #D33C26;
-  transform: scale(1.1);
-}
-
-.social-icon.ig {
-  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-}
-
-.social-icon.ig:hover {
-  filter: brightness(0.9);
-  transform: scale(1.1);
 }
 
 /* Project Reports */

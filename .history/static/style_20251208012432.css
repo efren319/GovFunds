@@ -179,12 +179,11 @@ nav a.logout-link:hover {
 .annual-budget-left {
   flex: 1;
   min-width: 300px;
-  padding: .75rem;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #1e1e1e;
+  border: 1px solid var(--navy);
   border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .annual-budget-left p {
@@ -194,7 +193,7 @@ nav a.logout-link:hover {
 }
 
 .annual-budget-left h1 {
-  color: #1e1e1e;
+  color: var(--navy);
   margin: 0;
   font-size: 3.0rem;
   font-weight: 700;
@@ -215,6 +214,16 @@ nav a.logout-link:hover {
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.annual-budget-right2 {
+  flex: 1;
+  min-width: 300px;
+  background: rgba(22, 22, 22, 0.096);
+  padding: 1.2rem;
+  border-radius: 16px;
+  border: 2px solid #1e1e1e79;
+  backdrop-filter: blur(10px);
 }
 
 .annual-budget-right p {
@@ -295,7 +304,6 @@ nav a.logout-link:hover {
   padding: 1rem 2rem;
   border: none;
   border-radius: 14px;
-  cursor: pointer;
   text-decoration: none;
   display: inline-block;
 }
@@ -726,12 +734,16 @@ select {
 /* Feedback Container */
 .feedback-container {
   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   gap: 2rem;
   margin: 2rem 0;
 }
 
 .feedback-section {
+  background: #fff;
   padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 6px 12px rgba(3, 3, 3, 0.04);
 }
 
 .feedback-section h3 {
@@ -783,123 +795,6 @@ select {
   margin: 0;
   color: var(--black);
   line-height: 1.6;
-}
-
-/* Team Profile Cards */
-.team-profile-wrapper {
-  padding: 2rem 0;
-}
-
-.team-profile-title {
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-.team-profile-subtitle {
-  text-align: center;
-  margin-bottom: 3rem;
-  color: #666;
-}
-
-.team-profile-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-
-.profile-card {
-  background: #ffffff;
-  border-radius: 24px;
-  padding: 15px;
-  padding-bottom: 20px;
-  box-shadow: inset 0 0 20px rgba(0, 20, 60, 0.2);
-}
-
-.profile-avatar {
-  width: 100%;
-  aspect-ratio: 1;
-  border-radius: 20px;
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 3rem;
-  font-weight: bold;
-}
-
-.profile-avatar-image {
-  width: 100%;
-  aspect-ratio: 1;
-  border-radius: 20px;
-  object-fit: cover;
-  margin-bottom: 20px;
-}
-
-.profile-info {
-  margin-bottom: 15px;
-  margin-left: 10px;
-}
-
-.profile-name {
-  color: #1EC4B0;
-  height: 50px;
-  font-size: 24px;
-  font-weight: 600;
-  margin: 0 0 5px 0;
-}
-
-.profile-role {
-  color: #a0a0a0;
-  height: 40px;
-  font-size: 14px;
-  line-height: 1.5;
-  margin: 0;
-}
-
-.profile-social {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-}
-
-.social-btn {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s, box-shadow 0.2s;
-  text-decoration: none;
-}
-
-.social-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-}
-
-.social-btn svg {
-  width: 30px;
-  height: 30px;
-  fill: white;
-}
-
-.social-btn.facebook {
-  background: linear-gradient(135deg, #1877f2 0%, #0d5cb8 100%);
-}
-
-.social-btn.instagram {
-  background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-}
-
-.social-btn.email {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 /* Content with Image Layout */
@@ -1405,6 +1300,7 @@ select {
   justify-content: center;
   min-height: calc(100vh - 200px);
   padding: 2rem;
+  background: linear-gradient(135deg, #f7f9fc 0%, #e8f0f7 100%);
 }
 
 .login-container {
@@ -1414,10 +1310,10 @@ select {
 
 .login-card {
   background: #ffffff;
-  border-radius: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
   padding: 2.5rem;
   border: 1px solid #e0e0e0;
-  box-shadow: inset 0 0 20px rgba(0, 20, 60, 0.2);
 }
 
 .login-header {
@@ -1451,19 +1347,18 @@ select {
 }
 
 .form-group label {
-    font-weight: 600;
-    color: #333;
-    font-size: 0.75rem;
-    padding-left: 15px;
+  font-weight: 600;
+  color: #333;
+  font-size: 0.95rem;
 }
 
 .form-group input {
-    padding: 0.75rem;
-    border: 2px solid #e0e0e0;
-    border-radius: 30px;
-    font-size: 0.95rem;
-    font-family: 'Inter', sans-serif;
-    transition: all 0.3s ease;
+  padding: 0.75rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.3s ease;
 }
 
 .form-group input:focus {
@@ -1478,16 +1373,16 @@ select {
 }
 
 .btn-login {
-    background: #202020;
-    color: #ffffff;
-    padding: 0.85rem 2rem;
-    border-radius: 30px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: inset 0 0 10px #585858;
-    transition: all 0.3s ease;
-    margin-top: 0.5rem;
+  background: #1e1e1e;
+  color: var(--navy);
+  padding: 0.85rem 2rem;
+  border: 2px solid #1e1e1e;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
 }
 
 .btn-login:hover {
