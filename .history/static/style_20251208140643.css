@@ -16,13 +16,6 @@ html {
   margin: 0;
   padding: 0;
   height: 100%;
-  /* Hide scrollbar while keeping scroll functionality */
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-}
-
-html::-webkit-scrollbar {
-  display: none;  /* Chrome, Safari, Opera */
 }
 
 body {
@@ -34,13 +27,6 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  /* Hide scrollbar while keeping scroll functionality */
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-}
-
-body::-webkit-scrollbar {
-  display: none;  /* Chrome, Safari, Opera */
 }
 
 .container {
@@ -469,7 +455,7 @@ nav a.logout-link:hover {
 .budget-info-card {
   flex: 1;
   padding: 0;
-  border-radius: 24px;
+  border-radius: 8px;
   border: 1px solid #dddddd;
   box-shadow: inset 0 0 20px rgba(0, 20, 60, 0.2);
   position: relative;
@@ -583,7 +569,7 @@ nav a.logout-link:hover {
 
 .chart-table-header {
   display: flex;
-  background: #1e1e1e;
+  background: 1e1e1e;
   color: white;
   font-weight: 600;
   border-bottom: 2px solid #ddd;

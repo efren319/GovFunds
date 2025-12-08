@@ -161,8 +161,8 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i = 0; i < count; i++) {
             const hueVariation = -20 + (i / count) * 40;
             const hue = 168 + hueVariation;
-            const lightness = 25 + (i % 5) * 15;
-            const saturation = 25 + (i % 3) * 10;
+            const lightness = 25 + (i % 5) * 150;
+            const saturation = 70 + (i % 3) * 10;
             colors.push(`hsl(${hue}, ${saturation}%, ${lightness}%)`);
         }
         return colors;
