@@ -242,31 +242,6 @@ def project_detail(pid):
         flash('Error loading project', 'danger')
         return redirect(url_for('projects'))
 
-# Get project data for editing (API endpoint)
-@app.route('/api/project/<int:pid>')
-def get_project_data(pid):
-    if 'admin_user' not in session or not session.get('admin_user'):
-        return jsonify({'error': 'Unauthorized'}), 401
-    
-    try:
-        project = Project.query.get(pid)
-        if not project:
-            return jsonify({'error': 'Project not found'}), 404
-        
-        return jsonify({
-            'id': project.id,
-            'name': project.name,
-            'project_sector': project.project_sector,
-            'region': project.region,
-            'status': project.status,
-            'allocated_budget': project.allocated_budget or 0,
-            'spent': project.spent or 0,
-            'description': project.description or ''
-        })
-    except Exception as e:
-        print(f"Error in get_project_data: {e}")
-        return jsonify({'error': 'Error fetching project'}), 500
-
 # Edit project (admin only)
 @app.route('/project/<int:pid>/edit', methods=['GET', 'POST'])
 def edit_project(pid):
@@ -293,12 +268,16 @@ def edit_project(pid):
             flash('Project updated successfully', 'success')
             return redirect(url_for('project_detail', pid=pid))
         
-        return redirect(url_for('projects'))
+        # Get all regions for the dropdown
+        regions = db.session.query(RegionBudget.region).distinct().order_by(RegionBudget.region).all()
+        regions = [r[0] for r in regions]
+        
+        return render_template('edit_project.html', project=project, regions=regions)
     except Exception as e:
         db.session.rollback()
         print(f"Error in edit_project: {e}")
         flash('Error updating project', 'danger')
-        return redirect(url_for('projects'))
+        return redirect(url_for('project_detail', pid=pid))
 
 # Feedback form
 @app.route('/feedback', methods=['GET', 'POST'])

@@ -1782,7 +1782,8 @@ select {
   width: 90%;
   max-height: 90vh;
   overflow-y: auto;
-  animation: slideUp 0.3s ease;
+  animation: slideUp 0.3s 
+ease;
 }
 
 .edit-modal-header {

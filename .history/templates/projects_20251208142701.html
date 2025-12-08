@@ -8,7 +8,7 @@
   {% for p in projects %}
   <div class="project-card" style="position: relative;">
     {% if session.get('admin_user') %}
-    <button class="edit-btn" data-project-id="{{ p.id }}">✎ Edit</button>
+    <button class="edit-btn" onclick="openEditModal({{ p.id }})">✎ Edit</button>
     {% endif %}
     <h3><a href="{{ url_for('project_detail', pid=p.id) }}">{{ p.name }}</a></h3>
     <p class="muted">{{ p.project_sector }} — {{ p.region or 'N/A' }}</p>
@@ -87,6 +87,7 @@
 
         <div class="form-row" style="gap: 1rem; grid-template-columns: 1fr 1fr;">
           <button class="btn" type="submit">Save Changes</button>
+          <button class="btn" type="button" onclick="closeEditModal()" style="background: #666; color: #fff;">Cancel</button>
         </div>
       </form>
     </div>
@@ -95,15 +96,8 @@
 
 <script>
   let currentProjectId = null;
-  const allRegions = JSON.parse('{{ regions_list|tojson|safe }}');
-
-  // Add event listeners to edit buttons
-  document.querySelectorAll('.edit-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const projectId = this.dataset.projectId;
-      openEditModal(parseInt(projectId));
-    });
-  });
+  // noinspection JSUnresolvedVariable
+  const allRegions = {{ regions_list|tojson|safe }};
 
   async function openEditModal(projectId) {
     currentProjectId = projectId;

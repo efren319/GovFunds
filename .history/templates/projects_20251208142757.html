@@ -87,6 +87,7 @@
 
         <div class="form-row" style="gap: 1rem; grid-template-columns: 1fr 1fr;">
           <button class="btn" type="submit">Save Changes</button>
+          <button class="btn" type="button" onclick="closeEditModal()" style="background: #666; color: #fff;">Cancel</button>
         </div>
       </form>
     </div>
@@ -96,14 +97,6 @@
 <script>
   let currentProjectId = null;
   const allRegions = JSON.parse('{{ regions_list|tojson|safe }}');
-
-  // Add event listeners to edit buttons
-  document.querySelectorAll('.edit-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const projectId = this.dataset.projectId;
-      openEditModal(parseInt(projectId));
-    });
-  });
 
   async function openEditModal(projectId) {
     currentProjectId = projectId;
