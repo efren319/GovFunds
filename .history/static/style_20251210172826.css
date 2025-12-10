@@ -663,8 +663,9 @@ nav a.logout-link:hover {
 
 /* Projects Hero Section */
 .projects-hero {
-  background: linear-gradient(0deg, rgb(247 249 252 / 45%), rgb(23 187 168 / 25%)), url(/static/images/project_bg.webp) center / cover no-repeat;
-  color: #1e1e1e;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5)), 
+              url('/static/images/project_bg.webp') center/cover no-repeat;
+  color: #fff;
   padding: 4rem 2rem;
   text-align: center;
   margin: 0;
@@ -851,7 +852,7 @@ nav a.logout-link:hover {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1rem;
-  margin: 10px 0 2rem 0;
+  margin-bottom: 2rem;
 }
 
 .project-card {

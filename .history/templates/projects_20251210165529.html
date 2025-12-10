@@ -1,74 +1,37 @@
 <!-- templates/projects.html -->
 {% extends "base.html" %}
+{% block content %}
+<h2>Projects</h2>
+<p>List of government projects being tracked.</p>
 
-{% block hero %}
-<!-- Projects Hero Section -->
-<section class="projects-hero">
-  <div class="projects-hero-content">
-    <h1>Government Projects</h1>
-    <p>A collection of government-led projects designed to enhance connectivity, support local communities, and drive national progress.</p>
-    <div class="projects-hero-stats">
-      <div class="hero-stat">
-        <div class="hero-stat-value">{{ total_count }}</div>
-        <div class="hero-stat-label">Total Projects</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-value">{{ planned_count }}</div>
-        <div class="hero-stat-label">Planned</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-value">{{ ongoing_count }}</div>
-        <div class="hero-stat-label">Ongoing</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-value">{{ completed_count }}</div>
-        <div class="hero-stat-label">Completed</div>
-      </div>
-    </div>
+<!-- Sticky Search and Filter Bar -->
+<div class="projects-filter-bar">
+  <div class="filter-search">
+    <input type="text" id="searchInput" placeholder="Search projects..." oninput="filterAndSortProjects()">
   </div>
-</section>
-
-<!-- Sticky Search and Filter Bar - Full Width -->
-<div class="projects-filter-wrapper">
-  <div class="projects-filter-bar">
-    <div class="filter-search">
-      <input type="text" id="searchInput" placeholder="Search projects..." oninput="filterAndSortProjects()">
-    </div>
-    <div class="filter-controls">
-      <select id="sortBy" onchange="filterAndSortProjects()">
-        <option value="name">Sort by Name</option>
-        <option value="date">Sort by Date</option>
-        <option value="budget">Sort by Budget</option>
-        <option value="spent">Sort by Spent</option>
-      </select>
-      <select id="sortOrder" onchange="filterAndSortProjects()">
-        <option value="asc">Ascending ↑</option>
-        <option value="desc">Descending ↓</option>
-      </select>
-      <select id="statusFilter" onchange="filterAndSortProjects()">
-        <option value="">All Status</option>
-        <option value="Planned">Planned</option>
-        <option value="Ongoing">Ongoing</option>
-        <option value="Completed">Completed</option>
-      </select>
-      <select id="regionFilter" onchange="filterAndSortProjects()">
-        <option value="">All Regions</option>
-        {% for region in regions_list %}
-        <option value="{{ region|lower }}">{{ region }}</option>
-        {% endfor %}
-      </select>
-      <select id="sectorFilter" onchange="filterAndSortProjects()">
-        <option value="">All Sectors</option>
-        {% for sector in sectors_list %}
-        <option value="{{ sector|lower }}">{{ sector }}</option>
-        {% endfor %}
-      </select>
-    </div>
+  <div class="filter-controls">
+    <select id="sortBy" onchange="filterAndSortProjects()">
+      <option value="name">Sort by Name</option>
+      <option value="date">Sort by Date</option>
+      <option value="budget">Sort by Budget</option>
+      <option value="spent">Sort by Spent</option>
+      <option value="status">Sort by Status</option>
+      <option value="region">Sort by Region</option>
+      <option value="sector">Sort by Sector</option>
+    </select>
+    <select id="sortOrder" onchange="filterAndSortProjects()">
+      <option value="asc">Ascending ↑</option>
+      <option value="desc">Descending ↓</option>
+    </select>
+    <select id="statusFilter" onchange="filterAndSortProjects()">
+      <option value="">All Status</option>
+      <option value="Planned">Planned</option>
+      <option value="Ongoing">Ongoing</option>
+      <option value="Completed">Completed</option>
+    </select>
   </div>
 </div>
-{% endblock %}
 
-{% block content %}
 <div class="projects-grid" id="projectsGrid">
   {% for p in projects %}
   <div class="project-card" style="position: relative;"
@@ -170,100 +133,6 @@
 <script>
   let currentProjectId = null;
   const allRegions = JSON.parse('{{ regions_list|tojson|safe }}');
-
-  // Filter and Sort Projects
-  function filterAndSortProjects() {
-    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-    const sortBy = document.getElementById('sortBy').value;
-    const sortOrder = document.getElementById('sortOrder').value;
-    const statusFilter = document.getElementById('statusFilter').value.toLowerCase();
-    const regionFilter = document.getElementById('regionFilter').value.toLowerCase();
-    const sectorFilter = document.getElementById('sectorFilter').value.toLowerCase();
-    
-    const grid = document.getElementById('projectsGrid');
-    const cards = Array.from(grid.querySelectorAll('.project-card'));
-    
-    // Filter cards
-    let visibleCount = 0;
-    cards.forEach(card => {
-      const name = card.dataset.name || '';
-      const sector = card.dataset.sector || '';
-      const region = card.dataset.region || '';
-      const status = card.dataset.status || '';
-      
-      const matchesSearch = name.includes(searchTerm) || 
-                           sector.includes(searchTerm) || 
-                           region.includes(searchTerm);
-      const matchesStatus = !statusFilter || status === statusFilter;
-      const matchesRegion = !regionFilter || region === regionFilter;
-      const matchesSector = !sectorFilter || sector === sectorFilter;
-      
-      if (matchesSearch && matchesStatus && matchesRegion && matchesSector) {
-        card.style.display = '';
-        visibleCount++;
-      } else {
-        card.style.display = 'none';
-      }
-    });
-    
-    // Show/hide no results message
-    document.getElementById('noResults').style.display = visibleCount === 0 ? 'block' : 'none';
-    
-    // Sort visible cards
-    const visibleCards = cards.filter(card => card.style.display !== 'none');
-    
-    visibleCards.sort((a, b) => {
-      let aVal, bVal;
-      
-      switch(sortBy) {
-        case 'name':
-          aVal = a.dataset.name || '';
-          bVal = b.dataset.name || '';
-          break;
-        case 'date':
-          aVal = a.dataset.date || '9999-99-99';
-          bVal = b.dataset.date || '9999-99-99';
-          break;
-        case 'budget':
-          aVal = parseFloat(a.dataset.budget) || 0;
-          bVal = parseFloat(b.dataset.budget) || 0;
-          break;
-        case 'spent':
-          aVal = parseFloat(a.dataset.spent) || 0;
-          bVal = parseFloat(b.dataset.spent) || 0;
-          break;
-        case 'status':
-          aVal = a.dataset.status || '';
-          bVal = b.dataset.status || '';
-          break;
-        case 'region':
-          aVal = a.dataset.region || '';
-          bVal = b.dataset.region || '';
-          break;
-        case 'sector':
-          aVal = a.dataset.sector || '';
-          bVal = b.dataset.sector || '';
-          break;
-        default:
-          aVal = a.dataset.name || '';
-          bVal = b.dataset.name || '';
-      }
-      
-      let comparison = 0;
-      if (typeof aVal === 'number' && typeof bVal === 'number') {
-        comparison = aVal - bVal;
-      } else {
-        comparison = String(aVal).localeCompare(String(bVal));
-      }
-      
-      return sortOrder === 'desc' ? -comparison : comparison;
-    });
-    
-    // Reorder DOM
-    visibleCards.forEach(card => grid.appendChild(card));
-    // Append hidden cards at the end
-    cards.filter(card => card.style.display === 'none').forEach(card => grid.appendChild(card));
-  }
 
   // Add event listeners to edit buttons
   document.querySelectorAll('.edit-btn').forEach(btn => {

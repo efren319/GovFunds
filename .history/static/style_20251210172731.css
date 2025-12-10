@@ -663,8 +663,9 @@ nav a.logout-link:hover {
 
 /* Projects Hero Section */
 .projects-hero {
-  background: linear-gradient(0deg, rgb(247 249 252 / 45%), rgb(23 187 168 / 25%)), url(/static/images/project_bg.webp) center / cover no-repeat;
-  color: #1e1e1e;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5)), 
+              url('/static/images/project_bg.webp') center/cover no-repeat;
+  color: #fff;
   padding: 4rem 2rem;
   text-align: center;
   margin: 0;
@@ -722,15 +723,12 @@ nav a.logout-link:hover {
 /* Projects Filter Bar - Full Width Sticky */
 .projects-filter-wrapper {
   position: sticky;
-  top: 50px;
+  top: 60px;
   z-index: 90;
-  border: 1px solid #e0e0e0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), inset 0 0 20px rgba(0, 20, 60, 0.2);
-  backdrop-filter: blur(10px);
-  margin: 0 auto;
-  margin-top: 10px;
-  width: 60rem;
-  border-radius: 40px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin: 0;
+  width: 100%;
 }
 
 .projects-filter-bar {
@@ -750,19 +748,21 @@ nav a.logout-link:hover {
 }
 
 .filter-search input {
-  width: 100%;
-  padding: 0.6rem 1rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 24px;
-  font-size: 0.95rem;
-  font-family: 'Inter', sans-serif;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+width: 100%;
+    padding: 0.6rem 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 24px;
+    font-size: 0.95rem;
+    font-family: 'Inter', sans-serif;
+    transition: border-color 0.3s 
+ease, box-shadow 0.3s 
+ease;
 }
 
 .filter-search input:focus {
   outline: none;
   border-color: var(--navy);
-  box-shadow: 0 0 0 3px rgb(0, 255, 225);
+  box-shadow: 0 0 0 3px rgba(30, 196, 176, 0.15);
 }
 
 .filter-search input::placeholder {
@@ -851,7 +851,7 @@ nav a.logout-link:hover {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1rem;
-  margin: 10px 0 2rem 0;
+  margin-bottom: 2rem;
 }
 
 .project-card {

@@ -177,8 +177,6 @@
     const sortBy = document.getElementById('sortBy').value;
     const sortOrder = document.getElementById('sortOrder').value;
     const statusFilter = document.getElementById('statusFilter').value.toLowerCase();
-    const regionFilter = document.getElementById('regionFilter').value.toLowerCase();
-    const sectorFilter = document.getElementById('sectorFilter').value.toLowerCase();
     
     const grid = document.getElementById('projectsGrid');
     const cards = Array.from(grid.querySelectorAll('.project-card'));
@@ -195,10 +193,8 @@
                            sector.includes(searchTerm) || 
                            region.includes(searchTerm);
       const matchesStatus = !statusFilter || status === statusFilter;
-      const matchesRegion = !regionFilter || region === regionFilter;
-      const matchesSector = !sectorFilter || sector === sectorFilter;
       
-      if (matchesSearch && matchesStatus && matchesRegion && matchesSector) {
+      if (matchesSearch && matchesStatus) {
         card.style.display = '';
         visibleCount++;
       } else {
