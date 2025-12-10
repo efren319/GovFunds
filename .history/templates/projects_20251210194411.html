@@ -2,46 +2,6 @@
 {% extends "base.html" %}
 
 {% block hero %}
-
-<!-- Sticky Search and Filter Bar - Full Width -->
-<div class="projects-filter-wrapper">
-  <div class="projects-filter-bar">
-    <div class="filter-search">
-      <input type="text" id="searchInput" placeholder="Search projects..." oninput="filterAndSortProjects()">
-    </div>
-    <div class="filter-controls">
-      <select id="sortBy" onchange="filterAndSortProjects()">
-        <option value="name">Sort by Name</option>
-        <option value="date">Sort by Date</option>
-        <option value="budget">Sort by Budget</option>
-        <option value="spent">Sort by Spent</option>
-      </select>
-      <select id="sortOrder" onchange="filterAndSortProjects()">
-        <option value="asc">Ascending ↑</option>
-        <option value="desc">Descending ↓</option>
-      </select>
-      <select id="statusFilter" onchange="filterAndSortProjects()">
-        <option value="">All Status</option>
-        <option value="Planned">Planned</option>
-        <option value="Ongoing">Ongoing</option>
-        <option value="Completed">Completed</option>
-      </select>
-      <select id="regionFilter" onchange="filterAndSortProjects()">
-        <option value="">All Regions</option>
-        {% for region in regions_list %}
-        <option value="{{ region|lower }}">{{ region }}</option>
-        {% endfor %}
-      </select>
-      <select id="sectorFilter" onchange="filterAndSortProjects()">
-        <option value="">All Sectors</option>
-        {% for sector in sectors_list %}
-        <option value="{{ sector|lower }}">{{ sector }}</option>
-        {% endfor %}
-      </select>
-    </div>
-  </div>
-</div>
-
 <!-- Projects Hero Section -->
 <section class="projects-hero">
   <div class="projects-hero-content">

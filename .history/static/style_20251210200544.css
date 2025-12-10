@@ -673,13 +673,14 @@ nav a.logout-link:hover {
 
 .projects-hero-content {
   max-width: 900px;
-  margin: 30px auto;
+  margin: 0 auto;
 }
 
 .projects-hero h1 {
-  margin: 0 0 .25rem;
-  font-size: 3.8rem;
-  font-family: 'Krona One', sans-serif;
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .projects-hero p {

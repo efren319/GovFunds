@@ -673,7 +673,7 @@ nav a.logout-link:hover {
 
 .projects-hero-content {
   max-width: 900px;
-  margin: 30px auto;
+  margin: 0 auto;
 }
 
 .projects-hero h1 {
