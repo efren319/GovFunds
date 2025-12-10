@@ -1,9 +1,10 @@
 <!-- templates/feedback.html -->
 {% extends "base.html" %}
 {% block content %}
+<div style="padding-left:30px;">
 <h2>Citizen Feedback</h2>
 <p>Send suggestions or report issues with projects.</p>
-
+</div>
 <div class="feedback-container">
   <!-- General Feedback Section -->
   <div class="feedback-section">
@@ -32,7 +33,7 @@
         <select name="project_id" required>
           <option value="">Select a Project to Report</option>
           {% for project in projects %}
-          <option value="{{ project.project_id }}">{{ project.project_name }} ({{ project.sector.sector_name if project.sector else 'N/A' }})</option>
+          <option value="{{ project.project_id }}">{{ project.project_name }} ({{ project.sector_name or 'N/A' }})</option>
           {% endfor %}
         </select>
       </div>

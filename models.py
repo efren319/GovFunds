@@ -9,6 +9,7 @@ class Project(db.Model):
     
     project_name = db.Column(db.String(100), nullable=False)
     project_description = db.Column(db.Text)
+    project_image = db.Column(db.String(255))  # Image filename
 
     allocated_budget = db.Column(db.Float, default=0)
     budget_spent = db.Column(db.Float, default=0)

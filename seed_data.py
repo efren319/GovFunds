@@ -25,6 +25,7 @@ def seed_data():
             db.session.commit()
             
             # Insert sample projects
+            # Note: project_image is optional - if None, the default sector image will be used
             print("Inserting sample projects...")
             projects = [
                 Project(
@@ -36,7 +37,8 @@ def seed_data():
                     project_status='Ongoing',
                     region_name='Region I',
                     start_date=date(2024, 5, 1),
-                    end_date=None
+                    end_date=None,
+                    project_image=None  # Uses default sector image
                 ),
                 Project(
                     project_name='Public Building Construction',
@@ -47,7 +49,8 @@ def seed_data():
                     project_status='Completed',
                     region_name='Region II',
                     start_date=date(2023, 10, 1),
-                    end_date=date(2024, 4, 15)
+                    end_date=date(2024, 4, 15),
+                    project_image=None  # Uses default sector image
                 ),
                 Project(
                     project_name='Bridge Repair and Maintenance',
@@ -58,7 +61,8 @@ def seed_data():
                     project_status='Ongoing',
                     region_name='Region III',
                     start_date=date(2024, 1, 10),
-                    end_date=None
+                    end_date=None,
+                    project_image=None  # Uses default sector image
                 ),
                 Project(
                     project_name='Irrigation System Project',
@@ -69,7 +73,8 @@ def seed_data():
                     project_status='Planned',
                     region_name='Region IV-A',
                     start_date=None,
-                    end_date=None
+                    end_date=None,
+                    project_image=None  # Uses default sector image
                 ),
                 Project(
                     project_name='Flood Control System - NCR',
@@ -80,7 +85,8 @@ def seed_data():
                     project_status='Ongoing',
                     region_name='National Capital Region',
                     start_date=date(2024, 3, 15),
-                    end_date=None
+                    end_date=None,
+                    project_image='images/projects/project1.webp'
                 ),
                 Project(
                     project_name='Disaster Relief Center',
@@ -91,7 +97,8 @@ def seed_data():
                     project_status='Planned',
                     region_name='Region VIII',
                     start_date=None,
-                    end_date=None
+                    end_date=None,
+                    project_image=None  # Uses default sector image
                 ),
             ]
             db.session.add_all(projects)

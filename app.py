@@ -3,7 +3,16 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify, f
 from sqlalchemy import func, text  # type: ignore
 from functools import wraps
 import hashlib
+import os
+from werkzeug.utils import secure_filename
 from models import db, Project, Feedback, ProjectReport
+
+# File upload configuration
+UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'images', 'projects')
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # PostgreSQL Configuration for Local Development
 DB_USER = 'postgres'
@@ -241,7 +250,8 @@ def get_project_data(pid):
             'status': project.project_status,
             'allocated_budget': project.allocated_budget or 0,
             'spent': project.budget_spent or 0,
-            'description': project.project_description or ''
+            'description': project.project_description or '',
+            'project_image': project.project_image or ''
         })
     except Exception as e:
         print(f"Error in get_project_data: {e}")
@@ -269,6 +279,19 @@ def edit_project(pid):
             project.budget_spent = float(request.form.get('spent') or 0)
             project.project_description = request.form.get('description', '').strip()
             
+            # Handle image upload
+            if 'project_image' in request.files:
+                file = request.files['project_image']
+                if file and file.filename and allowed_file(file.filename):
+                    # Ensure upload directory exists
+                    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+                    filename = secure_filename(file.filename)
+                    # Add timestamp to avoid duplicates
+                    import time
+                    filename = f"{int(time.time())}_{filename}"
+                    file.save(os.path.join(UPLOAD_FOLDER, filename))
+                    project.project_image = f"images/projects/{filename}"
+            
             db.session.commit()
             flash('Project updated successfully', 'success')
             return redirect(url_for('project_detail', pid=pid))
@@ -279,6 +302,42 @@ def edit_project(pid):
         print(f"Error in edit_project: {e}")
         flash('Error updating project', 'danger')
         return redirect(url_for('projects'))
+
+# Delete project (admin only)
+@app.route('/project/<int:pid>/delete', methods=['POST'])
+def delete_project(pid):
+    if 'admin_user' not in session or not session.get('admin_user'):
+        flash('You must be logged in as admin to delete projects', 'danger')
+        return redirect(url_for('login'))
+    
+    try:
+        project = Project.query.get(pid)
+        if not project:
+            flash('Project not found', 'warning')
+            return redirect(url_for('projects'))
+        
+        # Delete associated reports first
+        ProjectReport.query.filter_by(project_id=pid).delete()
+        
+        # Delete project image file if exists
+        if project.project_image:
+            image_path = os.path.join(app.static_folder, project.project_image)
+            if os.path.exists(image_path):
+                try:
+                    os.remove(image_path)
+                except Exception as img_err:
+                    print(f"Error deleting image file: {img_err}")
+        
+        # Delete the project
+        db.session.delete(project)
+        db.session.commit()
+        flash('Project deleted successfully', 'success')
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error in delete_project: {e}")
+        flash('Error deleting project', 'danger')
+    
+    return redirect(url_for('projects'))
 
 # Feedback form
 @app.route('/feedback', methods=['GET', 'POST'])
@@ -396,6 +455,20 @@ def admin():
                 status = request.form.get('status') or 'Planned'
                 region_name = request.form.get('region','').strip()
                 
+                # Handle image upload
+                project_image = None
+                if 'project_image' in request.files:
+                    file = request.files['project_image']
+                    if file and file.filename and allowed_file(file.filename):
+                        # Ensure upload directory exists
+                        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+                        filename = secure_filename(file.filename)
+                        # Add timestamp to avoid duplicates
+                        import time
+                        filename = f"{int(time.time())}_{filename}"
+                        file.save(os.path.join(UPLOAD_FOLDER, filename))
+                        project_image = f"images/projects/{filename}"
+                
                 new_project = Project(
                     project_name=name,
                     sector_name=sector_name,
@@ -403,7 +476,8 @@ def admin():
                     allocated_budget=allocated,
                     budget_spent=spent,
                     project_status=status,
-                    region_name=region_name
+                    region_name=region_name,
+                    project_image=project_image
                 )
                 db.session.add(new_project)
                 db.session.commit()
@@ -435,6 +509,7 @@ def admin():
                 'spent': project.budget_spent,
                 'status': project.project_status,
                 'region': project.region_name or '',
+                'project_image': project.project_image or '',
                 'unresolved_reports': unresolved_count
             }
             projects_with_reports.append(project_dict)

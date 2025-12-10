@@ -2,9 +2,20 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>{{ project.project_name }}</h2>
-<p class="muted">{{ project.sector_name or 'N/A' }} — {{ project.region_name or 'N/A' }}</p>
-<p>{{ project.project_description }}</p>
+<div class="project-detail-header">
+  <div class="project-detail-image">
+    {% if project.project_image %}
+    <img src="{{ url_for('static', filename=project.project_image) }}" alt="{{ project.project_name }}">
+    {% else %}
+    <img src="{{ url_for('static', filename='images/' + (project.sector_name or 'Road Infrastructure') + '.webp') }}" alt="{{ project.sector_name or 'Project' }}">
+    {% endif %}
+  </div>
+  <div class="project-detail-info">
+    <h2>{{ project.project_name }}</h2>
+    <p class="muted">{{ project.sector_name or 'N/A' }} — {{ project.region_name or 'N/A' }}</p>
+    <p>{{ project.project_description }}</p>
+  </div>
+</div>
 
 <ul class="detail-list">
   <li>Allocated Budget: ₱{{ "{:,.2f}".format(project.allocated_budget or 0) }}</li>

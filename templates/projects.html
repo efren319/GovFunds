@@ -72,6 +72,9 @@
 {% endblock %}
 
 {% block content %}
+<div>
+  <h2>Projects:</h2>
+</div>
 <div class="projects-grid" id="projectsGrid">
   {% for p in projects %}
   <div class="project-card" style="position: relative;"
@@ -85,13 +88,22 @@
     {% if session.get('admin_user') %}
     <button class="edit-btn" data-project-id="{{ p.project_id }}">✎ Edit</button>
     {% endif %}
-    <h3><a href="{{ url_for('project_detail', pid=p.project_id) }}">{{ p.project_name }}</a></h3>
-    <p class="muted">{{ p.sector_name or 'N/A' }} — {{ p.region_name or 'N/A' }}</p>
-    <p>{{ p.project_description or '-' }}</p>
-    <div class="project-meta">
-      <div>Allocated: ₱{{ "{:,.2f}".format(p.allocated_budget or 0) }}</div>
-      <div>Spent: ₱{{ "{:,.2f}".format(p.budget_spent or 0) }}</div>
-      <div>Status: <strong>{{ p.project_status }}</strong></div>
+    <a href="{{ url_for('project_detail', pid=p.project_id) }}" class="project-card-image">
+      {% if p.project_image %}
+      <img src="{{ url_for('static', filename=p.project_image) }}" alt="{{ p.project_name }}">
+      {% else %}
+      <img src="{{ url_for('static', filename='images/' + (p.sector_name or 'Road Infrastructure') + '.webp') }}" alt="{{ p.sector_name or 'Project' }}">
+      {% endif %}
+    </a>
+    <div class="project-card-content">
+      <h3><a href="{{ url_for('project_detail', pid=p.project_id) }}">{{ p.project_name }}</a></h3>
+      <p class="muted">{{ p.sector_name or 'N/A' }} — {{ p.region_name or 'N/A' }}</p>
+      <p class="project-desc">{{ p.project_description or '-' }}</p>
+      <div class="project-meta">
+        <div>Allocated: ₱{{ "{:,.2f}".format(p.allocated_budget or 0) }}</div>
+        <div>Spent: ₱{{ "{:,.2f}".format(p.budget_spent or 0) }}</div>
+        <div>Status: <strong>{{ p.project_status }}</strong></div>
+      </div>
     </div>
   </div>
   {% endfor %}
@@ -107,7 +119,7 @@
       <button class="edit-modal-close" onclick="closeEditModal()">&times;</button>
     </div>
     <div class="edit-modal-body">
-      <form id="editProjectForm" method="post">
+      <form id="editProjectForm" method="post" enctype="multipart/form-data">
         <div class="form-row">
           <div>
             <label>Project Name</label>
@@ -158,203 +170,40 @@
         </div>
 
         <div style="margin-bottom: 0.6rem;">
+          <label style="display: block; font-weight: 600; font-size: 0.95rem; color: #333; margin-bottom: 0.4rem;">Project Image</label>
+          <div class="file-upload-wrapper">
+            <input type="file" name="project_image" id="editProjectImageInput" accept="image/*" class="file-input-hidden">
+            <div id="currentImagePreview" class="file-preview" style="display: none;">
+              <img id="editImagePreview" src="" alt="Current image">
+              <span class="file-name" id="editFileName">Current image</span>
+              <button type="button" class="file-remove-btn" onclick="clearEditFileInput()">✕</button>
+            </div>
+            <label for="editProjectImageInput" class="file-upload-label" id="editUploadLabel">
+              <span class="file-upload-text">Click to upload new image</span>
+            </label>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 0.6rem;">
           <label style="display: block; font-weight: 600; font-size: 0.95rem; color: #333; margin-bottom: 0.4rem;">Description</label>
           <textarea name="description" rows="4" style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 6px; font-family: 'Inter', sans-serif; resize: vertical;"></textarea>
         </div>
 
-        <div class="form-row" style="gap: 1rem; grid-template-columns: 1fr 1fr;">
+        <div class="form-row" style="gap: 1rem; justify-content: space-between;">
           <button class="btn" type="submit">Save Changes</button>
+          <button type="button" class="btn btn-danger" onclick="deleteProject()">Delete Project</button>
         </div>
       </form>
     </div>
   </div>
 </div>
 
+<script src="{{ url_for('static', filename='projects.js') }}"></script>
 <script>
-  let currentProjectId = null;
-  const allRegions = JSON.parse('{{ regions_list|tojson|safe }}');
-
-  // Filter and Sort Projects
-  function filterAndSortProjects() {
-    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-    const sortBy = document.getElementById('sortBy').value;
-    const sortOrder = document.getElementById('sortOrder').value;
-    const statusFilter = document.getElementById('statusFilter').value.toLowerCase();
-    const regionFilter = document.getElementById('regionFilter').value.toLowerCase();
-    const sectorFilter = document.getElementById('sectorFilter').value.toLowerCase();
-    
-    const grid = document.getElementById('projectsGrid');
-    const cards = Array.from(grid.querySelectorAll('.project-card'));
-    
-    // Filter cards
-    let visibleCount = 0;
-    cards.forEach(card => {
-      const name = card.dataset.name || '';
-      const sector = card.dataset.sector || '';
-      const region = card.dataset.region || '';
-      const status = card.dataset.status || '';
-      
-      const matchesSearch = name.includes(searchTerm) || 
-                           sector.includes(searchTerm) || 
-                           region.includes(searchTerm);
-      const matchesStatus = !statusFilter || status === statusFilter;
-      const matchesRegion = !regionFilter || region === regionFilter;
-      const matchesSector = !sectorFilter || sector === sectorFilter;
-      
-      if (matchesSearch && matchesStatus && matchesRegion && matchesSector) {
-        card.style.display = '';
-        visibleCount++;
-      } else {
-        card.style.display = 'none';
-      }
-    });
-    
-    // Show/hide no results message
-    document.getElementById('noResults').style.display = visibleCount === 0 ? 'block' : 'none';
-    
-    // Sort visible cards
-    const visibleCards = cards.filter(card => card.style.display !== 'none');
-    
-    visibleCards.sort((a, b) => {
-      let aVal, bVal;
-      
-      switch(sortBy) {
-        case 'name':
-          aVal = a.dataset.name || '';
-          bVal = b.dataset.name || '';
-          break;
-        case 'date':
-          aVal = a.dataset.date || '9999-99-99';
-          bVal = b.dataset.date || '9999-99-99';
-          break;
-        case 'budget':
-          aVal = parseFloat(a.dataset.budget) || 0;
-          bVal = parseFloat(b.dataset.budget) || 0;
-          break;
-        case 'spent':
-          aVal = parseFloat(a.dataset.spent) || 0;
-          bVal = parseFloat(b.dataset.spent) || 0;
-          break;
-        case 'status':
-          aVal = a.dataset.status || '';
-          bVal = b.dataset.status || '';
-          break;
-        case 'region':
-          aVal = a.dataset.region || '';
-          bVal = b.dataset.region || '';
-          break;
-        case 'sector':
-          aVal = a.dataset.sector || '';
-          bVal = b.dataset.sector || '';
-          break;
-        default:
-          aVal = a.dataset.name || '';
-          bVal = b.dataset.name || '';
-      }
-      
-      let comparison = 0;
-      if (typeof aVal === 'number' && typeof bVal === 'number') {
-        comparison = aVal - bVal;
-      } else {
-        comparison = String(aVal).localeCompare(String(bVal));
-      }
-      
-      return sortOrder === 'desc' ? -comparison : comparison;
-    });
-    
-    // Reorder DOM
-    visibleCards.forEach(card => grid.appendChild(card));
-    // Append hidden cards at the end
-    cards.filter(card => card.style.display === 'none').forEach(card => grid.appendChild(card));
-  }
-
-  // Add event listeners to edit buttons
-  document.querySelectorAll('.edit-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const projectId = this.dataset.projectId;
-      openEditModal(parseInt(projectId));
-    });
-  });
-
-  async function openEditModal(projectId) {
-    currentProjectId = projectId;
-    try {
-      const response = await fetch(`/api/project/${projectId}`);
-      const project = await response.json();
-      
-      // Populate form with project data
-      document.querySelector('input[name="name"]').value = project.name;
-      document.querySelector('select[name="project_sector"]').value = project.project_sector;
-      document.querySelector('select[name="region"]').value = project.region;
-      document.querySelector('select[name="status"]').value = project.status;
-      document.querySelector('input[name="allocated_budget"]').value = project.allocated_budget;
-      document.querySelector('input[name="spent"]').value = project.spent;
-      document.querySelector('textarea[name="description"]').value = project.description || '';
-      
-      // Populate regions
-      populateRegions();
-      
-      // Show modal
-      document.getElementById('editModal').style.display = 'flex';
-    } catch (error) {
-      console.error('Error loading project:', error);
-      alert('Error loading project data');
-    }
-  }
-
-  function closeEditModal(event) {
-    if (event && event.target !== document.getElementById('editModal')) return;
-    document.getElementById('editModal').style.display = 'none';
-    currentProjectId = null;
-  }
-
-  function populateRegions() {
-    const select = document.getElementById('regionSelect');
-    const currentValue = select.value;
-    
-    // Clear existing options (except the first one)
-    while (select.options.length > 1) {
-      select.remove(1);
-    }
-    
-    // Add all regions
-    allRegions.forEach(region => {
-      const option = document.createElement('option');
-      option.value = region;
-      option.textContent = region;
-      select.appendChild(option);
-    });
-    
-    select.value = currentValue;
-  }
-
-  document.getElementById('editProjectForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const formData = new FormData(document.getElementById('editProjectForm'));
-    
-    try {
-      const response = await fetch(`/project/${currentProjectId}/edit`, {
-        method: 'POST',
-        body: formData
-      });
-      
-      if (response.ok) {
-        location.reload();
-      } else {
-        alert('Error updating project');
-      }
-    } catch (error) {
-      console.error('Error updating project:', error);
-      alert('Error updating project');
-    }
-  });
-
-  // Close modal when clicking outside
-  document.getElementById('editModal')?.addEventListener('click', function(e) {
-    if (e.target === this) {
-      closeEditModal();
-    }
+  // Initialize with regions data from server
+  document.addEventListener('DOMContentLoaded', function() {
+    const regions = JSON.parse('{{ regions_list|tojson|safe }}');
+    initProjectsPage(regions);
   });
 </script>
 {% endblock %}

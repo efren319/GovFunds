@@ -2,7 +2,7 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>Add Project</h2>
-<form method="post" class="form admin-form">
+<form method="post" class="form admin-form" enctype="multipart/form-data">
   <input type="hidden" name="action" value="add_project">
   <div class="form-row">
     <input name="name" placeholder="Project name" required>
@@ -34,6 +34,22 @@
       <option>Ongoing</option>
       <option>Completed</option>
     </select>
+  </div>
+  <div class="form-row">
+    <div style="flex: 1;">
+      <label style="display: block; font-weight: 600; margin-bottom: 0.4rem;">Project Image</label>
+      <div class="file-upload-wrapper">
+        <input type="file" name="project_image" id="projectImageInput" accept="image/*" class="file-input-hidden">
+        <label for="projectImageInput" class="file-upload-label">
+          <span class="file-upload-text">Click to upload image</span>
+        </label>
+        <div class="file-preview" id="filePreview" style="display: none;">
+          <img id="previewImage" src="" alt="Preview">
+          <span class="file-name" id="fileName"></span>
+          <button type="button" class="file-remove-btn" onclick="clearFileInput()">✕</button>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="form-row">
     <textarea name="description" placeholder="Description"></textarea>
@@ -93,4 +109,36 @@
     {% endfor %}
   </tbody>
 </table>
+
+<script>
+  // File upload preview functionality
+  document.getElementById('projectImageInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const preview = document.getElementById('filePreview');
+    const previewImage = document.getElementById('previewImage');
+    const fileName = document.getElementById('fileName');
+    const uploadLabel = document.querySelector('.file-upload-label');
+    
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        previewImage.src = e.target.result;
+        fileName.textContent = file.name;
+        preview.style.display = 'flex';
+        uploadLabel.style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  function clearFileInput() {
+    const input = document.getElementById('projectImageInput');
+    const preview = document.getElementById('filePreview');
+    const uploadLabel = document.querySelector('.file-upload-label');
+    
+    input.value = '';
+    preview.style.display = 'none';
+    uploadLabel.style.display = 'flex';
+  }
+</script>
 {% endblock %}
