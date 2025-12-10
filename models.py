@@ -19,8 +19,8 @@ class Project(db.Model):
     start_date = db.Column(db.Date)
     end_date = db.Column(db.Date)
 
-    region_name = db.Column(db.String(100), unique=True, nullable=False)
-    sector_name = db.Column(db.String(100), unique=True, nullable=False)
+    region_name = db.Column(db.String(100))
+    sector_name = db.Column(db.String(100))
     
     # Relationship to reports
     reports = db.relationship('ProjectReport', backref='project', lazy=True, cascade='all, delete-orphan')
@@ -39,7 +39,7 @@ class Feedback(db.Model):
 class ProjectReport(db.Model):
     report_id = db.Column(db.Integer, primary_key=True)
     
-    project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('project.project_id'), nullable=False)
 
     reporter_name = db.Column(db.String(100))
     reporter_email = db.Column(db.String(100))
@@ -47,7 +47,7 @@ class ProjectReport(db.Model):
     report_subject = db.Column(db.String(200), nullable=False)
     report_message = db.Column(db.Text, nullable=False)
 
-    type_name = db.Column(db.String(50), unique=True, nullable=False)
+    report_type = db.Column(db.String(50), default='General')
 
     is_resolved = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

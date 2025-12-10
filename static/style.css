@@ -654,7 +654,7 @@ nav a.logout-link:hover {
   background: var(--navy);
   color: #fff;
   padding: 0.4rem 0.8rem;
-  border-radius: 6px;
+  border-radius: 12px;
   text-decoration: none;
   font-size: 0.85rem;
   border: none;
@@ -707,7 +707,7 @@ nav a.logout-link:hover {
 .hero-stat-value {
   font-size: 2.5rem;
   font-weight: 700;
-  color: var(--navy);
+  color: #1e1e1e;
 }
 
 .hero-stat-label {
@@ -851,8 +851,9 @@ nav a.logout-link:hover {
 .project-card {
   background: #fff;
   padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 6px 12px rgba(3, 3, 3, 0.04);
+  border-radius: 16px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 6px 12px rgba(3, 3, 3, 0.04), inset 0 0 20px rgba(0, 20, 60, 0.2);
 }
 
 .project-card h3 {

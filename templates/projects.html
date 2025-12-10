@@ -80,13 +80,13 @@
        data-budget="{{ p.allocated_budget or 0 }}"
        data-spent="{{ p.budget_spent or 0 }}"
        data-status="{{ p.project_status|lower }}"
-       data-region="{{ (p.region.region_name if p.region else '')|lower }}"
-       data-sector="{{ (p.sector.sector_name if p.sector else '')|lower }}">
+       data-region="{{ (p.region_name or '')|lower }}"
+       data-sector="{{ (p.sector_name or '')|lower }}">
     {% if session.get('admin_user') %}
     <button class="edit-btn" data-project-id="{{ p.project_id }}">✎ Edit</button>
     {% endif %}
     <h3><a href="{{ url_for('project_detail', pid=p.project_id) }}">{{ p.project_name }}</a></h3>
-    <p class="muted">{{ p.sector.sector_name if p.sector else 'N/A' }} — {{ p.region.region_name if p.region else 'N/A' }}</p>
+    <p class="muted">{{ p.sector_name or 'N/A' }} — {{ p.region_name or 'N/A' }}</p>
     <p>{{ p.project_description or '-' }}</p>
     <div class="project-meta">
       <div>Allocated: ₱{{ "{:,.2f}".format(p.allocated_budget or 0) }}</div>

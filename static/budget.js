@@ -1,161 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
     console.log('budget.js loaded');
-    console.log('departmentsList:', typeof departmentsList !== 'undefined' ? departmentsList : 'NOT DEFINED');
     
-    // Wait a moment for departmentsList to be available from template
-    setTimeout(() => {
-        if (typeof initDepartmentCarousel === 'function' && typeof departmentsList !== 'undefined' && departmentsList.length > 0) {
-            // Transform data if needed - departmentsList contains objects with sector and budget properties
-            const depts = departmentsList.map(d => ({
-                name: d.sector,
-                budget: d.budget
-            }));
-            console.log('Initializing carousel with:', depts);
-            initDepartmentCarousel(depts);
-        } else {
-            console.log('Carousel not initialized - condition not met');
-            console.log('  initDepartmentCarousel exists:', typeof initDepartmentCarousel === 'function');
-            console.log('  departmentsList defined:', typeof departmentsList !== 'undefined');
-            console.log('  departmentsList length:', typeof departmentsList !== 'undefined' ? departmentsList.length : 0);
-        }
-    }, 50);
-
-    // Department Chart
-    const deptCanvas = document.getElementById('departmentChart');
-    if (deptCanvas) {
-        const deptCtx = deptCanvas.getContext('2d');
-        const deptLabels = JSON.parse(deptCanvas.dataset.labels);
-        const deptData = JSON.parse(deptCanvas.dataset.data);
-
-        const centerTextPlugin = {
-            id: 'centerText',
-            afterDraw(chart) {
-                const {ctx, chartArea: {width, height}} = chart;
-                ctx.save();
-                ctx.font = `${Math.min(width, height) / 20}px sans-serif`;
-                ctx.fillStyle = 'black';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText('Budget by Sector', width / 2, height / 2);
-                ctx.restore();
-            }
-        };
-
-        const deptChart = new Chart(deptCtx, {
-            type: 'doughnut',
-            data: {
-                labels: deptLabels,
-                datasets: [{
-                    data: deptData,
-                    backgroundColor: generateColors(deptData.length),
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: '50%',
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return '₱' + context.raw.toLocaleString();
-                            }
-                        }
-                    }
-                }
-            },
-            plugins: [centerTextPlugin]
-        });
-
-        // Populate Department Table
-        const deptTotal = deptData.reduce((a, b) => a + b, 0);
-        const deptTableBody = document.getElementById('deptTableBody');
-        deptLabels.forEach((label, index) => {
-            const amount = deptData[index];
-            const percentage = ((amount / deptTotal) * 100).toFixed(1);
-            const row = document.createElement('div');
-            row.className = 'chart-table-row';
-            row.innerHTML = `
-                <div class="chart-table-col">${label}</div>
-                <div class="chart-table-col">₱${amount.toLocaleString()}</div>
-                <div class="chart-table-col">${percentage}%</div>
-            `;
-            deptTableBody.appendChild(row);
-        });
+    let deptChart = null;
+    let regChart = null;
+    
+    function formatCurrency(amount) {
+        return '₱' + amount.toLocaleString();
     }
-
-    // Region Chart
-    const regCanvas = document.getElementById('regionChart');
-    if (regCanvas) {
-        const regCtx = regCanvas.getContext('2d');
-        const regLabels = JSON.parse(regCanvas.dataset.labels);
-        const regData = JSON.parse(regCanvas.dataset.data);
-
-        const centerTextPlugin2 = {
-            id: 'centerText',
-            afterDraw(chart) {
-                const {ctx, chartArea: {width, height}} = chart;
-                ctx.save();
-                ctx.font = `${Math.min(width, height) / 20}px sans-serif`;
-                ctx.fillStyle = 'black';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText('Budget by Region', width / 2, height / 2);
-                ctx.restore();
-            }
-        };
-
-        const regChart = new Chart(regCtx, {
-            type: 'doughnut',
-            data: {
-                labels: regLabels,
-                datasets: [{
-                    data: regData,
-                    backgroundColor: generateColors(regData.length),
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: '50%',
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return '₱' + context.raw.toLocaleString();
-                            }
-                        }
-                    }
-                }
-            },
-            plugins: [centerTextPlugin2]
-        });
-
-        // Populate Region Table
-        const regTotal = regData.reduce((a, b) => a + b, 0);
-        const regTableBody = document.getElementById('regionTableBody');
-        regLabels.forEach((label, index) => {
-            const amount = regData[index];
-            const percentage = ((amount / regTotal) * 100).toFixed(1);
-            const row = document.createElement('div');
-            row.className = 'chart-table-row';
-            row.innerHTML = `
-                <div class="chart-table-col">${label}</div>
-                <div class="chart-table-col">₱${amount.toLocaleString()}</div>
-                <div class="chart-table-col">${percentage}%</div>
-            `;
-            regTableBody.appendChild(row);
-        });
-    }
-
+    
     function generateColors(count) {
         const colors = [];
         for (let i = 0; i < count; i++) {
@@ -167,13 +19,191 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return colors;
     }
+    
+    function updateCharts(year) {
+        const data = BUDGET_DATA[year];
+        if (!data) return;
+        
+        // Update annual budget display
+        const annualDisplay = document.getElementById('annualBudgetDisplay');
+        const yearDisplay = document.getElementById('selectedYearDisplay');
+        if (annualDisplay) annualDisplay.textContent = formatCurrency(data.annual);
+        if (yearDisplay) yearDisplay.textContent = year;
+        
+        // Extract sector data
+        const sectorLabels = data.sectors.map(s => s.sector);
+        const sectorData = data.sectors.map(s => s.budget);
+        
+        // Extract region data
+        const regionLabels = data.regions.map(r => r.region);
+        const regionData = data.regions.map(r => r.budget);
+        
+        // Update Department Chart
+        const deptCanvas = document.getElementById('departmentChart');
+        if (deptCanvas) {
+            const deptCtx = deptCanvas.getContext('2d');
+            
+            if (deptChart) {
+                deptChart.destroy();
+            }
+            
+            const centerTextPlugin = {
+                id: 'centerText',
+                afterDraw(chart) {
+                    const {ctx, chartArea: {width, height}} = chart;
+                    ctx.save();
+                    ctx.font = `${Math.min(width, height) / 20}px sans-serif`;
+                    ctx.fillStyle = 'black';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('Budget by Sector', width / 2, height / 2);
+                    ctx.restore();
+                }
+            };
 
-    // Year selector functionality
+            deptChart = new Chart(deptCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: sectorLabels,
+                    datasets: [{
+                        data: sectorData,
+                        backgroundColor: generateColors(sectorData.length),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '50%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return formatCurrency(context.raw);
+                                }
+                            }
+                        }
+                    }
+                },
+                plugins: [centerTextPlugin]
+            });
+
+            // Populate Department Table
+            const deptTotal = sectorData.reduce((a, b) => a + b, 0);
+            const deptTableBody = document.getElementById('deptTableBody');
+            if (deptTableBody) {
+                deptTableBody.innerHTML = '';
+                sectorLabels.forEach((label, index) => {
+                    const amount = sectorData[index];
+                    const percentage = ((amount / deptTotal) * 100).toFixed(1);
+                    const row = document.createElement('div');
+                    row.className = 'chart-table-row';
+                    row.innerHTML = `
+                        <div class="chart-table-col">${label}</div>
+                        <div class="chart-table-col">${formatCurrency(amount)}</div>
+                        <div class="chart-table-col">${percentage}%</div>
+                    `;
+                    deptTableBody.appendChild(row);
+                });
+            }
+        }
+
+        // Update Region Chart
+        const regCanvas = document.getElementById('regionChart');
+        if (regCanvas) {
+            const regCtx = regCanvas.getContext('2d');
+            
+            if (regChart) {
+                regChart.destroy();
+            }
+
+            const centerTextPlugin2 = {
+                id: 'centerText',
+                afterDraw(chart) {
+                    const {ctx, chartArea: {width, height}} = chart;
+                    ctx.save();
+                    ctx.font = `${Math.min(width, height) / 20}px sans-serif`;
+                    ctx.fillStyle = 'black';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('Budget by Region', width / 2, height / 2);
+                    ctx.restore();
+                }
+            };
+
+            regChart = new Chart(regCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: regionLabels,
+                    datasets: [{
+                        data: regionData,
+                        backgroundColor: generateColors(regionData.length),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '50%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return formatCurrency(context.raw);
+                                }
+                            }
+                        }
+                    }
+                },
+                plugins: [centerTextPlugin2]
+            });
+
+            // Populate Region Table
+            const regTotal = regionData.reduce((a, b) => a + b, 0);
+            const regTableBody = document.getElementById('regionTableBody');
+            if (regTableBody) {
+                regTableBody.innerHTML = '';
+                regionLabels.forEach((label, index) => {
+                    const amount = regionData[index];
+                    const percentage = ((amount / regTotal) * 100).toFixed(1);
+                    const row = document.createElement('div');
+                    row.className = 'chart-table-row';
+                    row.innerHTML = `
+                        <div class="chart-table-col">${label}</div>
+                        <div class="chart-table-col">${formatCurrency(amount)}</div>
+                        <div class="chart-table-col">${percentage}%</div>
+                    `;
+                    regTableBody.appendChild(row);
+                });
+            }
+        }
+        
+        // Update rotating department display
+        if (typeof initDepartmentCarousel === 'function' && data.sectors.length > 0) {
+            const depts = data.sectors.map(d => ({
+                name: d.sector,
+                budget: d.budget
+            }));
+            initDepartmentCarousel(depts);
+        }
+    }
+    
+    // Initialize with default year (2025)
     const yearSelect = document.getElementById('yearSelect');
+    const initialYear = yearSelect ? parseInt(yearSelect.value) : 2025;
+    
+    // Wait for BUDGET_DATA to be available
+    setTimeout(() => {
+        updateCharts(initialYear);
+    }, 50);
+
+    // Year selector functionality - update charts without page reload
     if (yearSelect) {
         yearSelect.addEventListener('change', function() {
-            const year = this.value;
-            window.location.href = `?year=${year}`;
+            const year = parseInt(this.value);
+            updateCharts(year);
         });
     }
 });

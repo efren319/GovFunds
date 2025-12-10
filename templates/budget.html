@@ -7,8 +7,8 @@
     <!-- Left Side: Annual Budget -->
     <div class="annual-budget-left">
       <p>Annual Budget</p>
-      <h1>₱{{ "{:,.0f}".format(annual_budget) }}</h1>
-      <p>Year {{ selected_year }}</p>
+      <h1 id="annualBudgetDisplay">₱6,095,900,000,000</h1>
+      <p>Year <span id="selectedYearDisplay">2025</span></p>
     </div>
     
     <!-- Right Side: Rotating Sector -->
@@ -23,9 +23,9 @@
   <div class="hero-year-selector">
     <label for="yearSelect">Select Year:</label>
     <select id="yearSelect">
-      {% for year in available_years %}
-      <option value="{{ year }}" {% if year == selected_year %}selected{% endif %}>{{ year }}</option>
-      {% endfor %}
+      <option value="2025" selected>2025</option>
+      <option value="2024">2024</option>
+      <option value="2023">2023</option>
     </select>
   </div>
 </div>
@@ -84,9 +84,7 @@
     <h2>Budget by Project Sector</h2>
     <div class="chart-with-table">
       <div class="chart-wrapper">
-        <canvas id="departmentChart"
-            data-labels='{{ dept_labels|tojson }}'
-            data-data='{{ dept_data|tojson }}'></canvas>
+        <canvas id="departmentChart"></canvas>
       </div>
       <div class="chart-table">
         <div class="chart-table-header">
@@ -105,9 +103,7 @@
     <h2>Budget by Region</h2>
     <div class="chart-with-table">
       <div class="chart-wrapper">
-        <canvas id="regionChart"
-            data-labels='{{ region_labels|tojson }}'
-            data-data='{{ region_data|tojson }}'></canvas>
+        <canvas id="regionChart"></canvas>
       </div>
       <div class="chart-table">
         <div class="chart-table-header">
@@ -126,7 +122,108 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="{{ url_for('static', filename='carousel.js') }}"></script>
 <script>
-  const departmentsList = JSON.parse('{{ sector_budgets_list|tojson|safe }}');
+  // Static budget data - hardcoded since it doesn't change
+  const BUDGET_DATA = {
+    2025: {
+      annual: 6095900000000,
+      sectors: [
+        { sector: 'Road Infrastructure', budget: 541980000000 },
+        { sector: 'Special Infrastructure Projects', budget: 330000000000 },
+        { sector: 'Flood Control and Drainage', budget: 257060000000 },
+        { sector: 'Public Buildings', budget: 113522058000 },
+        { sector: 'Water Resources and Irrigation', budget: 42570000000 },
+        { sector: 'Bridge Infrastructure', budget: 38000000000 },
+        { sector: 'Local Infrastructure Support', budget: 25000000000 },
+        { sector: 'Disaster Response and Rehabilitation', budget: 10000000000 }
+      ],
+      regions: [
+        { region: 'National Capital Region', budget: 834600000000 },
+        { region: 'Region III', budget: 420600000000 },
+        { region: 'Region IV-A', budget: 395600000000 },
+        { region: 'Region V', budget: 257300000000 },
+        { region: 'Region VII', budget: 255900000000 },
+        { region: 'Region VI', budget: 236100000000 },
+        { region: 'Region VIII', budget: 209400000000 },
+        { region: 'Region I', budget: 198700000000 },
+        { region: 'Region X', budget: 195700000000 },
+        { region: 'Region IV-B', budget: 184600000000 },
+        { region: 'Region II', budget: 175000000000 },
+        { region: 'BARMM', budget: 172400000000 },
+        { region: 'Region XI', budget: 172500000000 },
+        { region: 'Region IX', budget: 149300000000 },
+        { region: 'Caraga', budget: 138900000000 },
+        { region: 'Region XII', budget: 137800000000 },
+        { region: 'Cordillera Administrative Region', budget: 106000000000 }
+      ]
+    },
+    2024: {
+      annual: 5705700000000,
+      sectors: [
+        { sector: 'Special Infrastructure Projects', budget: 410991162000 },
+        { sector: 'Flood Control and Drainage', budget: 244577911000 },
+        { sector: 'Road Infrastructure', budget: 132328352000 },
+        { sector: 'Public Buildings', budget: 100214102000 },
+        { sector: 'Water Resources and Irrigation', budget: 74903429000 },
+        { sector: 'Local Infrastructure Support', budget: 39343250000 },
+        { sector: 'Bridge Infrastructure', budget: 24755275000 },
+        { sector: 'Disaster Response and Rehabilitation', budget: 1000000000 }
+      ],
+      regions: [
+        { region: 'Cordillera Administrative Region', budget: 867228911000 },
+        { region: 'National Capital Region', budget: 532008065000 },
+        { region: 'Region IV-A', budget: 369230365000 },
+        { region: 'Region IV-B', budget: 341101910000 },
+        { region: 'Region V', budget: 234040470000 },
+        { region: 'Region VII', budget: 228181764000 },
+        { region: 'Region VI', budget: 222399947000 },
+        { region: 'Region VIII', budget: 205946394000 },
+        { region: 'Region X', budget: 190071333000 },
+        { region: 'Region I', budget: 180565920000 },
+        { region: 'Region XI', budget: 162666370000 },
+        { region: 'Region III', budget: 160174535000 },
+        { region: 'BARMM', budget: 149440406000 },
+        { region: 'Region IX', budget: 140072215000 },
+        { region: 'Region XII', budget: 127046390000 },
+        { region: 'Caraga', budget: 124270792000 },
+        { region: 'Region II', budget: 97668044000 }
+      ]
+    },
+    2023: {
+      annual: 5278700000000,
+      sectors: [
+        { sector: 'Special Infrastructure Projects', budget: 388286983000 },
+        { sector: 'Flood Control and Drainage', budget: 182989695000 },
+        { sector: 'Road Infrastructure', budget: 116252873000 },
+        { sector: 'Public Buildings', budget: 79409974000 },
+        { sector: 'Local Infrastructure Support', budget: 37285405000 },
+        { sector: 'Bridge Infrastructure', budget: 29333447000 },
+        { sector: 'Water Resources and Irrigation', budget: 15413692000 },
+        { sector: 'Disaster Response and Rehabilitation', budget: 11000000000 }
+      ],
+      regions: [
+        { region: 'National Capital Region', budget: 887000000000 },
+        { region: 'Region III', budget: 321100000000 },
+        { region: 'Region IV-A', budget: 318700000000 },
+        { region: 'Region V', budget: 212800000000 },
+        { region: 'Region VII', budget: 212000000000 },
+        { region: 'Region VI', budget: 203500000000 },
+        { region: 'Region VIII', budget: 177400000000 },
+        { region: 'Region X', budget: 175000000000 },
+        { region: 'Region I', budget: 169900000000 },
+        { region: 'Region XI', budget: 149100000000 },
+        { region: 'Region II', budget: 144700000000 },
+        { region: 'Region IV-B', budget: 134200000000 },
+        { region: 'BARMM', budget: 130300000000 },
+        { region: 'Region IX', budget: 126800000000 },
+        { region: 'Region XII', budget: 116400000000 },
+        { region: 'Caraga', budget: 109300000000 },
+        { region: 'Cordillera Administrative Region', budget: 98500000000 }
+      ]
+    }
+  };
+
+  // Initialize with current year's data for rotating display
+  const departmentsList = BUDGET_DATA[2025].sectors;
 </script>
 <script src="{{ url_for('static', filename='budget.js') }}"></script>
 

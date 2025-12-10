@@ -3,7 +3,7 @@
 
 {% block content %}
 <h2>{{ project.project_name }}</h2>
-<p class="muted">{{ project.sector.sector_name if project.sector else 'N/A' }} — {{ project.region.region_name if project.region else 'N/A' }}</p>
+<p class="muted">{{ project.sector_name or 'N/A' }} — {{ project.region_name or 'N/A' }}</p>
 <p>{{ project.project_description }}</p>
 
 <ul class="detail-list">
@@ -52,12 +52,12 @@
 {% if reports %}
 <h3>Project Reports ({{ reports|length }})</h3>
 <div class="reports-section">
-  {% for report, report_type in reports %}
+  {% for report in reports %}
   <div class="report-card {% if not report.is_resolved %}unresolved{% endif %}">
     <div class="report-header">
       <div>
         <h4>{{ report.report_subject }}</h4>
-        <span class="report-type report-type-{{ (report_type.type_name if report_type else 'general')|lower }}">{{ report_type.type_name if report_type else 'General' }}</span>
+        <span class="report-type report-type-{{ (report.report_type or 'general')|lower }}">{{ report.report_type or 'General' }}</span>
       </div>
       {% if not report.is_resolved %}
       <span class="unresolved-badge">UNRESOLVED</span>

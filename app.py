@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify, f
 from sqlalchemy import func, text  # type: ignore
 from functools import wraps
 import hashlib
-from models import db, User, UserRole, Project, Feedback, ProjectReport, RegionBudget, ProjectSectorBudget, AnnualBudget, Region, ProjectSector, ReportType
+from models import db, Project, Feedback, ProjectReport
 
 # PostgreSQL Configuration for Local Development
 DB_USER = 'postgres'
@@ -144,59 +144,10 @@ def home():
 def budget():
     try:
         projects = Project.query.all()
-
-        # Get selected year from query parameter (default to 2025)
-        selected_year = request.args.get('year', 2025, type=int)
-
-        # Get ALL available years from database
-        available_years_query = db.session.query(RegionBudget.year).distinct().order_by(RegionBudget.year.desc()).all()
-        years = [row[0] for row in available_years_query] if available_years_query else [2025]
-        
-        # If selected year doesn't exist in available years, use the first available
-        if years and selected_year not in years:
-            selected_year = years[0]
-
-        # Get project sector budget data with sector names
-        sector_budgets = db.session.query(ProjectSectorBudget, ProjectSector).join(
-            ProjectSector, ProjectSectorBudget.sector_id == ProjectSector.sector_id
-        ).filter(ProjectSectorBudget.year == selected_year).order_by(ProjectSectorBudget.sector_budget.desc()).all()
-        dept_labels = [s.sector_name for psb, s in sector_budgets]
-        dept_data = [psb.sector_budget for psb, s in sector_budgets]
-
-        # Get regional budget data with region names
-        regional_budgets = db.session.query(RegionBudget, Region).join(
-            Region, RegionBudget.region_id == Region.region_id
-        ).filter(RegionBudget.year == selected_year).order_by(Region.region_name).all()
-        region_labels = [r.region_name for rb, r in regional_budgets]
-        region_data = [rb.region_budget for rb, r in regional_budgets]
-        
-        # Get annual budget
-        annual_budget_row = AnnualBudget.query.filter_by(year=selected_year).first()
-        annual_budget_obj = annual_budget_row.total_budget if annual_budget_row else 0
-
-        # Convert sector_budgets to dictionaries for JSON serialization
-        sector_budgets_list = [
-            {'sector': s.sector_name, 'budget': psb.sector_budget, 'year': psb.year}
-            for psb, s in sector_budgets
-        ]
-
-        return render_template(
-            'budget.html',
-            projects=projects,
-            dept_labels=dept_labels,
-            dept_data=dept_data,
-            region_labels=region_labels,
-            region_data=region_data,
-            selected_year=selected_year,
-            available_years=years,
-            annual_budget=annual_budget_obj,
-            sector_budgets_list=sector_budgets_list
-        )
+        return render_template('budget.html', projects=projects)
     except Exception as e:
         print(f"Error in budget route: {e}")
-        import traceback
-        traceback.print_exc()
-        return render_template('budget.html', projects=[], dept_labels=[], dept_data=[], region_labels=[], region_data=[], selected_year=2025, available_years=[], annual_budget=0, sector_budgets_list=[])
+        return render_template('budget.html', projects=[])
 
 
 # API endpoint for budget data (used by Chart.js)
@@ -204,11 +155,10 @@ def budget():
 def budget_data():
     try:
         result = db.session.query(
-            ProjectSector.sector_name,
+            Project.sector_name,
             func.sum(Project.allocated_budget).label('allocated'),
             func.sum(Project.budget_spent).label('spent')
-        ).join(ProjectSector, Project.sector_id == ProjectSector.sector_id
-        ).group_by(ProjectSector.sector_name).all()
+        ).group_by(Project.sector_name).all()
 
         rows = [{'sector': row[0], 'allocated': row[1] or 0, 'spent': row[2] or 0} for row in result]
         return jsonify(rows)
@@ -216,18 +166,24 @@ def budget_data():
         print(f"Error in budget_data: {e}")
         return jsonify([])
 
+# Hardcoded lists for dropdowns
+REGIONS_LIST = [
+    'National Capital Region', 'Cordillera Administrative Region', 'Region I', 'Region II',
+    'Region III', 'Region IV-A', 'Region IV-B', 'Region V', 'Region VI', 'Region VII',
+    'Region VIII', 'Region IX', 'Region X', 'Region XI', 'Region XII', 'Caraga', 'BARMM'
+]
+
+SECTORS_LIST = [
+    'Road Infrastructure', 'Bridge Infrastructure', 'Flood Control and Drainage',
+    'Public Buildings', 'Water Resources and Irrigation', 'Special Infrastructure Projects',
+    'Disaster Response and Rehabilitation', 'Local Infrastructure Support'
+]
+
 # Projects listing
 @app.route('/projects')
 def projects():
     try:
         projects_list = Project.query.order_by(Project.project_id.desc()).all()
-        # Get all regions for the modal
-        regions = Region.query.order_by(Region.region_name).all()
-        regions_list = [r.region_name for r in regions]
-        
-        # Get all sectors for filter
-        sectors = ProjectSector.query.order_by(ProjectSector.sector_name).all()
-        sectors_list = [s.sector_name for s in sectors]
         
         # Count projects by status
         total_count = len(projects_list)
@@ -237,8 +193,8 @@ def projects():
         
         return render_template('projects.html', 
                                projects=projects_list, 
-                               regions_list=regions_list,
-                               sectors_list=sectors_list,
+                               regions_list=REGIONS_LIST,
+                               sectors_list=SECTORS_LIST,
                                total_count=total_count,
                                planned_count=planned_count,
                                ongoing_count=ongoing_count,
@@ -257,10 +213,8 @@ def project_detail(pid):
             flash('Project not found', 'warning')
             return redirect(url_for('projects'))
         
-        # Get reports for this project with report type names
-        reports = db.session.query(ProjectReport, ReportType).outerjoin(
-            ReportType, ProjectReport.report_type_id == ReportType.report_type_id
-        ).filter(ProjectReport.project_id == pid).order_by(ProjectReport.created_at.desc()).all()
+        # Get reports for this project
+        reports = ProjectReport.query.filter_by(project_id=pid).order_by(ProjectReport.created_at.desc()).all()
         
         return render_template('project_details.html', project=project, reports=reports)
     except Exception as e:
@@ -279,17 +233,11 @@ def get_project_data(pid):
         if not project:
             return jsonify({'error': 'Project not found'}), 404
         
-        # Get sector and region names
-        sector_name = project.sector.sector_name if project.sector else ''
-        region_name = project.region.region_name if project.region else ''
-        
         return jsonify({
             'id': project.project_id,
             'name': project.project_name,
-            'project_sector': sector_name,
-            'sector_id': project.sector_id,
-            'region': region_name,
-            'region_id': project.region_id,
+            'project_sector': project.sector_name or '',
+            'region': project.region_name or '',
             'status': project.project_status,
             'allocated_budget': project.allocated_budget or 0,
             'spent': project.budget_spent or 0,
@@ -314,21 +262,8 @@ def edit_project(pid):
         
         if request.method == 'POST':
             project.project_name = request.form.get('name', '').strip()
-            
-            # Handle sector - look up or create
-            sector_name = request.form.get('project_sector', '').strip()
-            if sector_name:
-                sector = ProjectSector.query.filter_by(sector_name=sector_name).first()
-                if sector:
-                    project.sector_id = sector.sector_id
-            
-            # Handle region - look up or create
-            region_name = request.form.get('region', '').strip()
-            if region_name:
-                region = Region.query.filter_by(region_name=region_name).first()
-                if region:
-                    project.region_id = region.region_id
-            
+            project.sector_name = request.form.get('project_sector', '').strip()
+            project.region_name = request.form.get('region', '').strip()
             project.project_status = request.form.get('status', 'Planned')
             project.allocated_budget = float(request.form.get('allocated_budget') or 0)
             project.budget_spent = float(request.form.get('spent') or 0)
@@ -367,17 +302,13 @@ def feedback():
             try:
                 project_id = int(project_id)
                 
-                # Look up report type
-                report_type_obj = ReportType.query.filter_by(type_name=report_type).first()
-                report_type_id = report_type_obj.report_type_id if report_type_obj else None
-                
                 new_report = ProjectReport(
                     project_id=project_id,
                     reporter_name=reporter_name,
                     reporter_email=reporter_email,
                     report_subject=report_subject,
                     report_message=report_message,
-                    report_type_id=report_type_id
+                    report_type=report_type
                 )
                 db.session.add(new_report)
                 db.session.commit()
@@ -465,22 +396,14 @@ def admin():
                 status = request.form.get('status') or 'Planned'
                 region_name = request.form.get('region','').strip()
                 
-                # Look up sector_id
-                sector = ProjectSector.query.filter_by(sector_name=sector_name).first()
-                sector_id = sector.sector_id if sector else None
-                
-                # Look up region_id
-                region = Region.query.filter_by(region_name=region_name).first()
-                region_id = region.region_id if region else None
-                
                 new_project = Project(
                     project_name=name,
-                    sector_id=sector_id,
+                    sector_name=sector_name,
                     project_description=desc,
                     allocated_budget=allocated,
                     budget_spent=spent,
                     project_status=status,
-                    region_id=region_id
+                    region_name=region_name
                 )
                 db.session.add(new_project)
                 db.session.commit()
@@ -503,19 +426,15 @@ def admin():
                 is_resolved=False
             ).count()
             
-            # Get sector and region names
-            sector_name = project.sector.sector_name if project.sector else ''
-            region_name = project.region.region_name if project.region else ''
-            
             project_dict = {
                 'id': project.project_id,
                 'name': project.project_name,
-                'project_sector': sector_name,
+                'project_sector': project.sector_name or '',
                 'description': project.project_description,
                 'allocated_budget': project.allocated_budget,
                 'spent': project.budget_spent,
                 'status': project.project_status,
-                'region': region_name,
+                'region': project.region_name or '',
                 'unresolved_reports': unresolved_count
             }
             projects_with_reports.append(project_dict)
@@ -527,7 +446,6 @@ def admin():
         reports_with_project_names = []
         for report in unresolved_reports:
             project = Project.query.get(report.project_id)
-            report_type_name = report.report_type.type_name if report.report_type else 'General'
             report_dict = {
                 'id': report.report_id,
                 'project_id': report.project_id,
@@ -536,27 +454,17 @@ def admin():
                 'reporter_email': report.reporter_email,
                 'report_subject': report.report_subject,
                 'report_message': report.report_message,
-                'report_type': report_type_name,
+                'report_type': report.report_type or 'General',
                 'is_resolved': report.is_resolved,
                 'created_at': report.created_at.strftime('%Y-%m-%d %H:%M') if report.created_at else ''
             }
             reports_with_project_names.append(report_dict)
         
         # Hardcoded infrastructure departments
-        departments = [
-            'Road Infrastructure',
-            'Bridge Infrastructure',
-            'Flood Control and Drainage',
-            'Public Buildings',
-            'Water Resources and Irrigation',
-            'Special Infrastructure Projects',
-            'Disaster Response and Rehabilitation',
-            'Local Infrastructure Support'
-        ]
+        departments = SECTORS_LIST
         
-        # Get all unique regions
-        regions = Region.query.order_by(Region.region_name).all()
-        regions = [r.region_name for r in regions]
+        # Use hardcoded regions
+        regions = REGIONS_LIST
     except Exception as e:
         projects_with_reports = []
         reports_with_project_names = []
