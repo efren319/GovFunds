@@ -63,14 +63,34 @@ A Flask-based web application for tracking government projects, budgets, and reg
    createdb govfunds
    ```
 
-6. **Run the application**
+6. **Seed the database with sample data**
+   ```bash
+   psql -U postgres -d govfunds -f seed.sql
+   ```
+   Or using Python:
+   ```bash
+   python seed_data.py
+   ```
+
+7. **Run the application**
    ```bash
    python app.py
    ```
    Visit: `http://localhost:5000`
 
-### Auto-Seeding
-The app automatically seeds the database with sample data on first run if empty!
+### Database Setup Options
+
+**Option 1: Using SQL file (Recommended)**
+```bash
+psql -U postgres -d govfunds -f seed.sql
+```
+
+**Option 2: Using Python script**
+```bash
+python seed_data.py
+```
+
+Both methods create the tables and insert sample data.
 
 ## Project Structure
 

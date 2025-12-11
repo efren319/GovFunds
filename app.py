@@ -56,23 +56,18 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Initialize database
 db.init_app(app)
 
-# Auto-seed database on startup if empty
-def init_db_with_data():
-    """Initialize database with sample data if empty"""
+# Initialize database on startup
+def init_db():
+    """Initialize database tables"""
     with app.app_context():
         try:
             db.create_all()
-            
-            # Check if database is empty
-            if Project.query.first() is None:
-                print("Database is empty. Seeding with sample data...")
-                from seed_data import seed_data
-                seed_data()
+            print("✓ Database tables created/verified")
         except Exception as e:
             print(f"Error during database initialization: {e}")
 
 # Run initialization when app starts
-init_db_with_data()
+init_db()
 
 # Authentication decorator
 def login_required(f):
