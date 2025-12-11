@@ -473,9 +473,8 @@ nav a.logout-link:hover {
 .budget-quick-cards {
   display: flex;
   gap: 2rem;
-  margin: 3rem 0;
-  padding-left : 35rem;
-  padding-right: 35rem;
+  width: 60rem;
+  margin: 2rem auto;
 }
 
 .budget-info-card {
@@ -868,6 +867,15 @@ nav a.logout-link:hover {
   display: flex;
   flex-direction: row;
   overflow: hidden;
+  /* Slide-in animation */
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.project-card.visible {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .project-card-image {

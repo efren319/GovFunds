@@ -53,6 +53,36 @@ function initProjectsPage(regions) {
       }
     });
   }
+
+  // Initialize scroll animation for project cards
+  initScrollAnimation();
+}
+
+// Scroll animation for project cards
+function initScrollAnimation() {
+  const cards = document.querySelectorAll('.project-card');
+  
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.1
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        // Add visible class when in view
+        entry.target.classList.add('visible');
+      } else {
+        // Remove visible class when out of view to reset animation
+        entry.target.classList.remove('visible');
+      }
+    });
+  }, observerOptions);
+
+  cards.forEach(card => {
+    observer.observe(card);
+  });
 }
 
 // Filter and Sort Projects
