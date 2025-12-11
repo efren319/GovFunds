@@ -2206,3 +2206,176 @@ select {
   background: #c82333;
 }
 
+/* About Page Styles */
+.about-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.about-section {
+  margin-bottom: 3rem;
+}
+
+.about-mission h2 {
+  color: var(--navy);
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.about-mission p {
+  color: #333;
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+.about-principles-section {
+  text-align: center;
+  padding-top: 2rem;
+  border-top: 1px solid #eee;
+}
+
+.about-principles-section h2 {
+  color: var(--navy);
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.principles-subtitle {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* About Quick Cards */
+.about-quick-cards {
+  display: flex;
+  gap: 2rem;
+  max-width: 60rem;
+  margin: 2rem auto;
+  justify-content: center;
+}
+
+.about-info-card {
+  flex: 1;
+  max-width: 280px;
+  padding: 0;
+  border-radius: 24px;
+  border: 1px solid #dddddd;
+  box-shadow: inset 0 0 20px rgba(0, 20, 60, 0.2);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+
+.about-info-card::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 120px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  flex-shrink: 0;
+}
+
+.about-info-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: rgba(255, 255, 255, 0.11);
+  pointer-events: none;
+}
+
+.about-info-card > * {
+  padding: 0 1.5rem;
+}
+
+.about-info-card h3 {
+  padding-top: 1rem;
+  padding-bottom: 0.5rem;
+  font-size: 1.2rem;
+  color: #1e1e1e;
+  margin: 0;
+}
+
+.about-info-card p {
+  padding-bottom: 1.5rem;
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.about-info-card.transparency-card::before {
+  background-image: url('/static/images/transparency.webp');
+  height: 10rem;
+}
+
+.about-info-card.accountability-card::before {
+  background-image: url('/static/images/accountability.webp');
+  height: 10rem;
+}
+
+.about-info-card.innovation-card::before {
+  background-image: url('/static/images/innovation.webp');
+  height: 10rem;
+}
+
+@media (max-width: 768px) {
+  .about-quick-cards {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .about-info-card {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+/* SDG Section Styles */
+.sdg {
+  text-align: center;
+  padding: 2rem 0;
+  margin-top: 2rem;
+  border-top: 1px solid #eee;
+}
+
+.sdg h2 {
+  color: var(--navy);
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.sdg-subtitle {
+  color: #666;
+  font-size: 0.95rem;
+  max-width: 700px;
+  margin: 0 auto 1.5rem;
+  line-height: 1.6;
+}
+
+.sdg-images {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.sdg-img {
+  width: 160px;
+  height: auto;
+  transition: transform 0.3s ease;
+}
+
+.sdg-img:hover {
+  transform: scale(1.05);
+}

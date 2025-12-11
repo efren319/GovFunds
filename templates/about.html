@@ -1,22 +1,42 @@
 <!-- templates/about.html -->
 {% extends "base.html" %}
 {% block content %}
-<h2>Mission</h2>
-<p>The GovFunds Transparency Portal is a digital platform designed to promote transparency and accountability by tracking government fund allocations and spending. It empowers citizens to monitor public projects, fostering trust and good governance.</p>
+<div class="about-page">
+  <section class="about-section">
+    <div class="about-mission">
+      <h2>Mission</h2>
+      <p>The GovFunds Transparency Portal is a digital platform designed to promote transparency and accountability by tracking government fund allocations and spending. It empowers citizens to monitor public projects, fostering trust and good governance.</p>
+    </div>
+  </section>
 
-<h2>Our Core Principles</h2>
-<p>These values guide the mission of the GovFunds Transparency Portal.</p>
+  <section class="about-section about-principles-section">
+    <h2>Our Core Principles</h2>
+    <p class="principles-subtitle">These values guide the mission of the GovFunds Transparency Portal.</p>
+    
+    <div class="about-quick-cards">
+      <div class="about-info-card transparency-card">
+        <h3>Transparency</h3>
+        <p>Ensuring open access to government financial data, allowing citizens to clearly see how public funds are allocated and utilized. Transparency builds public trust and encourages responsible decision-making.</p>
+      </div>
+      <div class="about-info-card accountability-card">
+        <h3>Accountability</h3>
+        <p> Accountability
+Promoting honesty and integrity in government projects by enabling citizens to monitor fund spending and project progress. Accountability strengthens public confidence and encourages efficient fund management.</p>
+      </div>
+      <div class="about-info-card innovation-card">
+        <h3>Innovation</h3>
+        <p>We leverage modern technology to create user-friendly tools that make government data accessible to everyone.</p>
+      </div>
+    </div>
+  </section>
 
-<section class="sdg-cards">
-  <div class="sdg">
-    <h4>SDG 16</h4>
-    <p>Peace, Justice, and Strong Institutions — we promote transparency and accountability.</p>
-  </div>
-  <div class="sdg">
-    <h4>SDG 9</h4>
-    <p>Industry, Innovation, and Infrastructure — we use digital tools to improve governance.</p>
-  </div>
-</section>
-
-<p>For more information about our team, visit the <a href="{{ url_for('contact') }}">Contact page</a> to learn about our members and connect with them.</p>
+  <section class="sdg">
+    <h2>Sustainable Development Goals</h2>
+    <p class="sdg-subtitle">This project supports SDG 16: Peace, Justice, and Strong Institutions by fostering transparency and accountability, and SDG 9: Industry, Innovation, and Infrastructure by utilizing digital innovation for better governance.</p>
+    <div class="sdg-images">
+      <img src="{{ url_for('static', filename='images/sdg_9.webp') }}" alt="SDG 9: Industry, Innovation, and Infrastructure" class="sdg-img">
+      <img src="{{ url_for('static', filename='images/sdg_16.webp') }}" alt="SDG 16: Peace, Justice, and Strong Institutions" class="sdg-img">
+    </div>
+  </section>
+</div>
 {% endblock %}
