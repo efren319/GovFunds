@@ -356,13 +356,30 @@ def feedback():
             try:
                 project_id = int(project_id)
                 
+                # Handle file upload
+                image_file = None
+                if 'report_image' in request.files:
+                    file = request.files['report_image']
+                    if file and file.filename and allowed_file(file.filename):
+                        filename = secure_filename(file.filename)
+                        # Add timestamp to avoid filename conflicts
+                        import time
+                        timestamp = int(time.time())
+                        filename = f"report_{timestamp}_{filename}"
+                        file.save(os.path.join(UPLOAD_FOLDER, filename))
+                        image_file = filename
+                    elif file and file.filename:
+                        flash('Invalid file type. Please use PNG, JPG, JPEG, GIF, or WebP.', 'danger')
+                        return redirect(url_for('feedback'))
+                
                 new_report = ProjectReport(
                     project_id=project_id,
                     reporter_name=reporter_name,
                     reporter_email=reporter_email,
                     report_subject=report_subject,
                     report_message=report_message,
-                    report_type=report_type
+                    report_type=report_type,
+                    report_image=image_file
                 )
                 db.session.add(new_report)
                 db.session.commit()
@@ -525,6 +542,7 @@ def admin():
                 'report_subject': report.report_subject,
                 'report_message': report.report_message,
                 'report_type': report.report_type or 'General',
+                'report_image': report.report_image,
                 'is_resolved': report.is_resolved,
                 'created_at': report.created_at.strftime('%Y-%m-%d %H:%M') if report.created_at else ''
             }

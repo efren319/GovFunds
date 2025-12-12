@@ -49,6 +49,8 @@ class ProjectReport(db.Model):
     report_message = db.Column(db.Text, nullable=False)
 
     report_type = db.Column(db.String(50), default='General')
+    
+    report_image = db.Column(db.String(255))  # Image filename
 
     is_resolved = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

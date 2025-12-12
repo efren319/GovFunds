@@ -1,26 +1,40 @@
 <!-- templates/admin.html -->
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <h2>Add Project</h2>
 <form method="post" class="form admin-form" enctype="multipart/form-data">
-  <input type="hidden" name="action" value="add_project">
+  <input type="hidden" name="action" value="add_project" />
   <div class="form-row">
-    <input name="name" placeholder="Project name" required>
+    <input name="name" placeholder="Project name" required />
     <select name="project_sector" required>
       <option value="">Select Project Sector</option>
       <option value="Road Infrastructure">Road Infrastructure</option>
       <option value="Bridge Infrastructure">Bridge Infrastructure</option>
-      <option value="Flood Control and Drainage">Flood Control and Drainage</option>
+      <option value="Flood Control and Drainage">
+        Flood Control and Drainage
+      </option>
       <option value="Public Buildings">Public Buildings</option>
-      <option value="Water Resources and Irrigation">Water Resources and Irrigation</option>
-      <option value="Special Infrastructure Projects">Special Infrastructure Projects</option>
-      <option value="Disaster Response and Rehabilitation">Disaster Response and Rehabilitation</option>
-      <option value="Local Infrastructure Support">Local Infrastructure Support</option>
+      <option value="Water Resources and Irrigation">
+        Water Resources and Irrigation
+      </option>
+      <option value="Special Infrastructure Projects">
+        Special Infrastructure Projects
+      </option>
+      <option value="Disaster Response and Rehabilitation">
+        Disaster Response and Rehabilitation
+      </option>
+      <option value="Local Infrastructure Support">
+        Local Infrastructure Support
+      </option>
     </select>
   </div>
   <div class="form-row">
-    <input name="allocated_budget" type="number" step="0.01" placeholder="Allocated budget">
-    <input name="spent" type="number" step="0.01" placeholder="Spent">
+    <input
+      name="allocated_budget"
+      type="number"
+      step="0.01"
+      placeholder="Allocated budget"
+    />
+    <input name="spent" type="number" step="0.01" placeholder="Spent" />
   </div>
   <div class="form-row">
     <select name="region" required>
@@ -36,17 +50,31 @@
     </select>
   </div>
   <div class="form-row">
-    <div style="flex: 1;">
-      <label style="display: block; font-weight: 600; margin-bottom: 0.4rem;">Project Image</label>
+    <div style="flex: 1">
+      <label style="display: block; font-weight: 600; margin-bottom: 0.4rem"
+        >Project Image</label
+      >
       <div class="file-upload-wrapper">
-        <input type="file" name="project_image" id="projectImageInput" accept="image/*" class="file-input-hidden">
+        <input
+          type="file"
+          name="project_image"
+          id="projectImageInput"
+          accept="image/*"
+          class="file-input-hidden"
+        />
         <label for="projectImageInput" class="file-upload-label">
           <span class="file-upload-text">Click to upload image</span>
         </label>
-        <div class="file-preview" id="filePreview" style="display: none;">
-          <img id="previewImage" src="" alt="Preview">
+        <div class="file-preview" id="filePreview" style="display: none">
+          <img id="previewImage" src="" alt="Preview" />
           <span class="file-name" id="fileName"></span>
-          <button type="button" class="file-remove-btn" onclick="clearFileInput()">✕</button>
+          <button
+            type="button"
+            class="file-remove-btn"
+            onclick="clearFileInput()"
+          >
+            ✕
+          </button>
         </div>
       </div>
     </div>
@@ -68,17 +96,33 @@
     <div class="admin-report-header">
       <div>
         <h4>{{ report['report_subject'] }}</h4>
-        <p class="report-project">Project: <strong>{{ report['project_name'] }}</strong></p>
+        <p class="report-project">
+          Project: <strong>{{ report['project_name'] }}</strong>
+        </p>
       </div>
       <span class="unresolved-badge">UNRESOLVED</span>
     </div>
-    <p class="admin-report-type">Type: <strong>{{ report['report_type'] }}</strong></p>
+    {% if report['report_image'] %}
+    <div class="report-image">
+      <img
+        src="{{ url_for('static', filename='images/projects/' + report['report_image']) }}"
+        alt="Report image"
+      />
+    </div>
+    {% endif %}
+    <p class="admin-report-type">
+      Type: <strong>{{ report['report_type'] }}</strong>
+    </p>
     <p class="admin-report-message">{{ report['report_message'] }}</p>
     <div class="admin-report-meta">
       <span>From: {{ report['reporter_name'] or 'Anonymous' }}</span>
       <span>{{ report['created_at'] }}</span>
     </div>
-    <form method="post" action="{{ url_for('resolve_report', report_id=report['id']) }}" style="margin-top: 1rem;">
+    <form
+      method="post"
+      action="{{ url_for('resolve_report', report_id=report['id']) }}"
+      style="margin-top: 1rem"
+    >
       <button type="submit" class="resolve">Mark as Resolved</button>
     </form>
   </div>
@@ -88,7 +132,17 @@
 
 <h3>Recent Projects</h3>
 <table class="data-table">
-  <thead><tr><th>ID</th><th>Name</th><th>Sector</th><th>Allocated</th><th>Spent</th><th>Status</th><th>Reports</th></tr></thead>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Sector</th>
+      <th>Allocated</th>
+      <th>Spent</th>
+      <th>Status</th>
+      <th>Reports</th>
+    </tr>
+  </thead>
   <tbody>
     {% for p in projects %}
     <tr>
@@ -100,7 +154,9 @@
       <td>{{ p['status'] }}</td>
       <td>
         {% if p['unresolved_reports'] and p['unresolved_reports'] > 0 %}
-        <span class="report-badge" title="Unresolved reports">{{ p['unresolved_reports'] }} 🔴</span>
+        <span class="report-badge" title="Unresolved reports"
+          >{{ p['unresolved_reports'] }} 🔴</span
+        >
         {% else %}
         <span class="report-badge-ok">0 ✓</span>
         {% endif %}
@@ -112,33 +168,35 @@
 
 <script>
   // File upload preview functionality
-  document.getElementById('projectImageInput').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    const preview = document.getElementById('filePreview');
-    const previewImage = document.getElementById('previewImage');
-    const fileName = document.getElementById('fileName');
-    const uploadLabel = document.querySelector('.file-upload-label');
-    
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        previewImage.src = e.target.result;
-        fileName.textContent = file.name;
-        preview.style.display = 'flex';
-        uploadLabel.style.display = 'none';
-      };
-      reader.readAsDataURL(file);
-    }
-  });
+  document
+    .getElementById("projectImageInput")
+    .addEventListener("change", function (e) {
+      const file = e.target.files[0];
+      const preview = document.getElementById("filePreview");
+      const previewImage = document.getElementById("previewImage");
+      const fileName = document.getElementById("fileName");
+      const uploadLabel = document.querySelector(".file-upload-label");
+
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          previewImage.src = e.target.result;
+          fileName.textContent = file.name;
+          preview.style.display = "flex";
+          uploadLabel.style.display = "none";
+        };
+        reader.readAsDataURL(file);
+      }
+    });
 
   function clearFileInput() {
-    const input = document.getElementById('projectImageInput');
-    const preview = document.getElementById('filePreview');
-    const uploadLabel = document.querySelector('.file-upload-label');
-    
-    input.value = '';
-    preview.style.display = 'none';
-    uploadLabel.style.display = 'flex';
+    const input = document.getElementById("projectImageInput");
+    const preview = document.getElementById("filePreview");
+    const uploadLabel = document.querySelector(".file-upload-label");
+
+    input.value = "";
+    preview.style.display = "none";
+    uploadLabel.style.display = "flex";
   }
 </script>
 {% endblock %}

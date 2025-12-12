@@ -1,22 +1,26 @@
 <!-- templates/feedback.html -->
-{% extends "base.html" %}
-{% block content %}
-<div style="padding-left:30px;">
-<h2>Citizen Feedback</h2>
-<p>Send suggestions or report issues with projects.</p>
+{% extends "base.html" %} {% block content %}
+<div style="padding-left: 30px">
+  <h2>Citizen Feedback</h2>
+  <p>Send suggestions or report issues with projects.</p>
 </div>
 <div class="feedback-container">
   <!-- General Feedback Section -->
   <div class="feedback-section">
     <h3>Submit General Feedback</h3>
     <form method="post" class="form">
-      <input type="hidden" name="feedback_type" value="general">
+      <input type="hidden" name="feedback_type" value="general" />
       <div class="form-row">
-        <input type="text" name="name" placeholder="Your name (optional)">
-        <input type="email" name="email" placeholder="Email (optional)">
+        <input type="text" name="name" placeholder="Your name (optional)" />
+        <input type="email" name="email" placeholder="Email (optional)" />
       </div>
       <div class="form-row">
-        <textarea name="message" rows="5" placeholder="Your message" required></textarea>
+        <textarea
+          name="message"
+          rows="5"
+          placeholder="Your message"
+          required
+        ></textarea>
       </div>
       <div class="form-row">
         <button class="btn" type="submit">Submit Feedback</button>
@@ -27,22 +31,37 @@
   <!-- Project Report Section -->
   <div class="feedback-section">
     <h3>Report a Project</h3>
-    <form method="post" class="form">
-      <input type="hidden" name="feedback_type" value="report">
+    <form method="post" class="form" enctype="multipart/form-data">
+      <input type="hidden" name="feedback_type" value="report" />
       <div class="form-row">
         <select name="project_id" required>
           <option value="">Select a Project to Report</option>
           {% for project in projects %}
-          <option value="{{ project.project_id }}">{{ project.project_name }} ({{ project.sector_name or 'N/A' }})</option>
+          <option value="{{ project.project_id }}">
+            {{ project.project_name }} ({{ project.sector_name or 'N/A' }})
+          </option>
           {% endfor %}
         </select>
       </div>
       <div class="form-row">
-        <input type="text" name="reporter_name" placeholder="Your name (optional)">
-        <input type="email" name="reporter_email" placeholder="Email (optional)">
+        <input
+          type="text"
+          name="reporter_name"
+          placeholder="Your name (optional)"
+        />
+        <input
+          type="email"
+          name="reporter_email"
+          placeholder="Email (optional)"
+        />
       </div>
       <div class="form-row">
-        <input type="text" name="report_subject" placeholder="Report subject" required>
+        <input
+          type="text"
+          name="report_subject"
+          placeholder="Report subject"
+          required
+        />
       </div>
       <div class="form-row">
         <select name="report_type">
@@ -53,7 +72,46 @@
         </select>
       </div>
       <div class="form-row">
-        <textarea name="report_message" rows="5" placeholder="Describe your report in detail" required></textarea>
+        <textarea
+          name="report_message"
+          rows="5"
+          placeholder="Describe your report in detail"
+          required
+        ></textarea>
+      </div>
+      <div class="form-row" style="grid-column: 1 / -1">
+        <div style="flex: 1">
+          <label style="display: block; font-weight: 600; margin-bottom: 0.4rem"
+            >Report Image (Optional)</label
+          >
+          <div class="file-upload-wrapper">
+            <input
+              type="file"
+              name="report_image"
+              id="reportImageInput"
+              accept="image/*"
+              class="file-input-hidden"
+            />
+            <label for="reportImageInput" class="file-upload-label">
+              <span class="file-upload-text">Click to upload image</span>
+            </label>
+            <div
+              class="file-preview"
+              id="reportFilePreview"
+              style="display: none"
+            >
+              <img id="reportPreviewImage" src="" alt="Preview" />
+              <span class="file-name" id="reportFileName"></span>
+              <button
+                type="button"
+                class="file-remove-btn"
+                onclick="clearReportFileInput()"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="form-row">
         <button class="btn" type="submit">Submit Report</button>
@@ -71,15 +129,23 @@
       <div class="feedback-carousel-item">
         <div class="feedback-item-header">
           <div class="feedback-item-avatar">
-            <span>{{ feedback.name[0].upper() if feedback.name else 'A' }}</span>
+            <span
+              >{{ feedback.name[0].upper() if feedback.name else 'A' }}</span
+            >
           </div>
           <div class="feedback-item-info">
             <p class="feedback-name">{{ feedback.name or 'Anonymous' }}</p>
-            <span class="feedback-role">{{ feedback.role.capitalize() if feedback.role else 'Citizen' }}</span>
+            <span class="feedback-role"
+              >{{ feedback.role.capitalize() if feedback.role else 'Citizen'
+              }}</span
+            >
           </div>
         </div>
         <p class="feedback-message">{{ feedback.message }}</p>
-        <p class="feedback-date">{{ feedback.created_at.strftime('%B %d, %Y') if feedback.created_at else 'Recently' }}</p>
+        <p class="feedback-date">
+          {{ feedback.created_at.strftime('%B %d, %Y') if feedback.created_at
+          else 'Recently' }}
+        </p>
       </div>
       {% endfor %}
       <!-- Duplicate items for infinite scroll effect -->
@@ -87,17 +153,61 @@
       <div class="feedback-carousel-item">
         <div class="feedback-item-header">
           <div class="feedback-item-avatar">
-            <span>{{ feedback.name[0].upper() if feedback.name else 'A' }}</span>
+            <span
+              >{{ feedback.name[0].upper() if feedback.name else 'A' }}</span
+            >
           </div>
           <div class="feedback-item-info">
             <p class="feedback-name">{{ feedback.name or 'Anonymous' }}</p>
           </div>
         </div>
         <p class="feedback-message">{{ feedback.message }}</p>
-        <p class="feedback-date">{{ feedback.created_at.strftime('%B %d, %Y') if feedback.created_at else 'Recently' }}</p>
+        <p class="feedback-date">
+          {{ feedback.created_at.strftime('%B %d, %Y') if feedback.created_at
+          else 'Recently' }}
+        </p>
       </div>
       {% endfor %}
     </div>
   </div>
 </section>
+
+<script>
+  // File upload preview functionality
+  document
+    .getElementById("reportImageInput")
+    .addEventListener("change", function (e) {
+      const file = e.target.files[0];
+      const preview = document.getElementById("reportFilePreview");
+      const previewImage = document.getElementById("reportPreviewImage");
+      const fileName = document.getElementById("reportFileName");
+      const uploadLabel = document.querySelector(
+        '[for="reportImageInput"].file-upload-label'
+      );
+
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          previewImage.src = e.target.result;
+          fileName.textContent = file.name;
+          preview.style.display = "flex";
+          uploadLabel.style.display = "none";
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+  function clearReportFileInput() {
+    const input = document.getElementById("reportImageInput");
+    const preview = document.getElementById("reportFilePreview");
+    const uploadLabel = document.querySelector(
+      '[for="reportImageInput"].file-upload-label'
+    );
+
+    input.value = "";
+    preview.style.display = "none";
+    uploadLabel.style.display = "flex";
+  }
+</script>
+
 {% endblock %}

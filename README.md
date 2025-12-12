@@ -29,6 +29,7 @@ A Flask-based web application for tracking government projects, budgets, and reg
 ## Local Development Setup
 
 ### Prerequisites
+
 - Python 3.8+
 - PostgreSQL 12+ (installed and running locally)
 - pip
@@ -36,40 +37,43 @@ A Flask-based web application for tracking government projects, budgets, and reg
 ### Installation Steps
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/efren319/govfunds.git
-   cd govfunds
+   cd GovFunds
    ```
 
 2. **Create and activate virtual environment**
+
    ```bash
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
 3. **Install dependencies**
+
    ```bash
    pip install -r requirements.txt
    ```
 
 4. **Configure environment variables**
+
    ```bash
    cp .env.example .env
    ```
+
    Edit `.env` with your local database credentials
 
 5. **Create PostgreSQL database**
+
    ```bash
    createdb govfunds
    ```
 
 6. **Seed the database with sample data**
+
    ```bash
    psql -U postgres -d govfunds -f seed.sql
-   ```
-   Or using Python:
-   ```bash
-   python seed_data.py
    ```
 
 7. **Run the application**
@@ -81,11 +85,13 @@ A Flask-based web application for tracking government projects, budgets, and reg
 ### Database Setup Options
 
 **Option 1: Using SQL file (Recommended)**
+
 ```bash
 psql -U postgres -d govfunds -f seed.sql
 ```
 
 **Option 2: Using Python script**
+
 ```bash
 python seed_data.py
 ```
@@ -127,10 +133,12 @@ Both methods create the tables and insert sample data.
 ## Admin Login
 
 **Credentials:**
+
 - Username: `admin` | Password: `admin123`
 - Username: `staff` | Password: `staff123`
 
 ### Public Routes
+
 - `GET /` - Home page
 - `GET /projects` - Projects listing
 - `GET /project/<id>` - Project details
@@ -142,6 +150,7 @@ Both methods create the tables and insert sample data.
 - `GET /about` - About page
 
 ### Admin Routes
+
 - `GET /login` - Login page
 - `POST /login` - Submit login
 - `GET /logout` - Logout
@@ -150,4 +159,5 @@ Both methods create the tables and insert sample data.
 - `POST /admin/resolve-report/<id>` - Mark report as resolved
 
 ### API Endpoints
+
 - `GET /api/budget_data` - Budget data for charts

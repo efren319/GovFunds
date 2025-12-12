@@ -1,9 +1,11 @@
 <!-- templates/home.html -->
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block hero %}
 <section class="hero">
-  <h1><b>Gov</b>Funds <br>Transparency Portal</h1>
-  <p>Promoting government transparency through open access to fund and project data.</p>
+  <h1><b>Gov</b>Funds <br />Transparency Portal</h1>
+  <p>
+    Promoting government transparency through open access to fund and project
+    data.
+  </p>
   <div class="hero-cta">
     <a class="btn" href="{{ url_for('projects') }}">View Projects</a>
     <a class="btn outline" href="{{ url_for('budget') }}">Track Spending</a>
@@ -23,6 +25,7 @@
     </div>
   </div>
 </section>
+{% endblock %} {% block content %}
 
 <section class="quick-cards">
   <div class="card budget-card">
@@ -52,14 +55,19 @@
         <div class="feedback-carousel-item">
           <div class="feedback-item-header">
             <div class="feedback-item-avatar">
-              <span>{{ feedback.name[0].upper() if feedback.name else 'A' }}</span>
+              <span
+                >{{ feedback.name[0].upper() if feedback.name else 'A' }}</span
+              >
             </div>
             <div class="feedback-item-info">
               <p class="feedback-name">{{ feedback.name or 'Anonymous' }}</p>
             </div>
           </div>
           <p class="feedback-message">{{ feedback.message }}</p>
-          <p class="feedback-date">{{ feedback.created_at.strftime('%B %d, %Y') if feedback.created_at else 'Recently' }}</p>
+          <p class="feedback-date">
+            {{ feedback.created_at.strftime('%B %d, %Y') if feedback.created_at
+            else 'Recently' }}
+          </p>
         </div>
         {% endfor %}
         <!-- Duplicate items for infinite scroll effect -->
@@ -67,14 +75,19 @@
         <div class="feedback-carousel-item">
           <div class="feedback-item-header">
             <div class="feedback-item-avatar">
-              <span>{{ feedback.name[0].upper() if feedback.name else 'A' }}</span>
+              <span
+                >{{ feedback.name[0].upper() if feedback.name else 'A' }}</span
+              >
             </div>
             <div class="feedback-item-info">
               <p class="feedback-name">{{ feedback.name or 'Anonymous' }}</p>
             </div>
           </div>
           <p class="feedback-message">{{ feedback.message }}</p>
-          <p class="feedback-date">{{ feedback.created_at.strftime('%B %d, %Y') if feedback.created_at else 'Recently' }}</p>
+          <p class="feedback-date">
+            {{ feedback.created_at.strftime('%B %d, %Y') if feedback.created_at
+            else 'Recently' }}
+          </p>
         </div>
         {% endfor %}
       </div>
@@ -82,7 +95,10 @@
   </section>
 
   <div class="philippines-image">
-    <img src="{{ url_for('static', filename='images/philippines.webp') }}" alt="Philippines Map">
+    <img
+      src="{{ url_for('static', filename='images/philippines.webp') }}"
+      alt="Philippines Map"
+    />
   </div>
 </div>
 {% endblock %}
