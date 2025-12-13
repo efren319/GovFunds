@@ -10,7 +10,6 @@ CREATE TABLE project (
     allocated_budget FLOAT DEFAULT 0,
     budget_spent FLOAT DEFAULT 0,
     project_status VARCHAR(20) DEFAULT 'Planned',
-    project_address VARCHAR(200),
     start_date DATE,
     end_date DATE,
     region_name VARCHAR(100),
@@ -224,7 +223,7 @@ INSERT INTO project_report (
     report_subject,
     report_message,
     report_type,
-    report_image
+    report_image,
     is_resolved
 ) VALUES
 (1, 'Juan Dela Cruz', 'juan@email.com', 'Roof Problem', 'Roofing work not completed', 'General Feedback', 'images/projects/project1.webp', FALSE),

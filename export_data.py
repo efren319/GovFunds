@@ -36,7 +36,6 @@ def export_data():
                 'allocated_budget': p.allocated_budget,
                 'budget_spent': p.budget_spent,
                 'project_status': p.project_status,
-                'project_address': p.project_address,
                 'start_date': p.start_date,
                 'end_date': p.end_date,
                 'region_name': p.region_name,
