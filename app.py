@@ -4,6 +4,8 @@ from sqlalchemy import func, text  # type: ignore
 from functools import wraps
 import hashlib
 import os
+import json
+from datetime import datetime
 from werkzeug.utils import secure_filename
 from models import db, Project, Feedback, ProjectReport
 
@@ -58,13 +60,117 @@ db.init_app(app)
 
 # Initialize database on startup
 def init_db():
-    """Initialize database tables"""
+    """Initialize database tables and seed data if empty"""
     with app.app_context():
         try:
             db.create_all()
             print("✓ Database tables created/verified")
+            
+            # Check if database is empty
+            project_count = Project.query.count()
+            
+            if project_count == 0:
+                print("→ Database is empty. Seeding from seed.sql...")
+                seed_from_sql()
+                print("✓ Database seeded successfully")
+                
+                # Export to JSON after seeding
+                sync_to_json()
+                print("✓ Data exported to JSON files")
+            else:
+                print(f"✓ Database already populated with {project_count} projects")
         except Exception as e:
             print(f"Error during database initialization: {e}")
+
+def seed_from_sql():
+    """Execute seed.sql to populate database"""
+    try:
+        seed_sql_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'seed.sql')
+        
+        if not os.path.exists(seed_sql_path):
+            print(f"Warning: seed.sql not found at {seed_sql_path}")
+            return
+        
+        with open(seed_sql_path, 'r', encoding='utf-8') as f:
+            sql_content = f.read()
+        
+        # Execute SQL
+        db.session.execute(text(sql_content))
+        db.session.commit()
+        print("✓ Seed SQL executed successfully")
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error executing seed.sql: {e}")
+        raise
+
+def sync_to_json():
+    """Export all database records to JSON files"""
+    try:
+        data_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
+        os.makedirs(data_folder, exist_ok=True)
+        
+        # Export projects
+        projects = Project.query.all()
+        projects_data = []
+        for p in projects:
+            projects_data.append({
+                'project_id': p.project_id,
+                'project_name': p.project_name,
+                'project_description': p.project_description,
+                'project_image': p.project_image,
+                'allocated_budget': p.allocated_budget,
+                'budget_spent': p.budget_spent,
+                'project_status': p.project_status,
+                'start_date': p.start_date.isoformat() if p.start_date else None,
+                'end_date': p.end_date.isoformat() if p.end_date else None,
+                'region_name': p.region_name,
+                'sector_name': p.sector_name
+            })
+        
+        projects_path = os.path.join(data_folder, 'projects.json')
+        with open(projects_path, 'w', encoding='utf-8') as f:
+            json.dump(projects_data, f, ensure_ascii=False, indent=2)
+        
+        # Export feedback
+        feedback_list = Feedback.query.all()
+        feedback_data = []
+        for fb in feedback_list:
+            feedback_data.append({
+                'feedback_id': fb.feedback_id,
+                'name': fb.name,
+                'email': fb.email,
+                'message': fb.message,
+                'created_at': fb.created_at.isoformat() if fb.created_at else None
+            })
+        
+        feedback_path = os.path.join(data_folder, 'feedback.json')
+        with open(feedback_path, 'w', encoding='utf-8') as f:
+            json.dump(feedback_data, f, ensure_ascii=False, indent=2)
+        
+        # Export reports
+        reports = ProjectReport.query.all()
+        reports_data = []
+        for r in reports:
+            reports_data.append({
+                'report_id': r.report_id,
+                'project_id': r.project_id,
+                'reporter_name': r.reporter_name,
+                'reporter_email': r.reporter_email,
+                'report_subject': r.report_subject,
+                'report_message': r.report_message,
+                'report_type': r.report_type,
+                'report_image': r.report_image,
+                'is_resolved': r.is_resolved,
+                'created_at': r.created_at.isoformat() if r.created_at else None
+            })
+        
+        reports_path = os.path.join(data_folder, 'reports.json')
+        with open(reports_path, 'w', encoding='utf-8') as f:
+            json.dump(reports_data, f, ensure_ascii=False, indent=2)
+        
+        print("✓ Data synced to JSON files")
+    except Exception as e:
+        print(f"Error syncing to JSON: {e}")
 
 # Run initialization when app starts
 init_db()
@@ -288,6 +394,10 @@ def edit_project(pid):
                     project.project_image = f"images/projects/{filename}"
             
             db.session.commit()
+            
+            # Sync to JSON
+            sync_to_json()
+            
             flash('Project updated successfully', 'success')
             return redirect(url_for('project_detail', pid=pid))
         
@@ -383,6 +493,10 @@ def feedback():
                 )
                 db.session.add(new_report)
                 db.session.commit()
+                
+                # Sync to JSON
+                sync_to_json()
+                
                 flash('Thank you — your project report has been submitted.', 'success')
                 return redirect(url_for('project_detail', pid=project_id))
             except (ValueError, Exception) as e:
@@ -401,6 +515,10 @@ def feedback():
             new_feedback = Feedback(name=name, email=email, message=message)
             db.session.add(new_feedback)
             db.session.commit()
+            
+            # Sync to JSON
+            sync_to_json()
+            
             flash('Thank you — your feedback has been submitted.', 'success')
         
         return redirect(url_for('feedback'))
@@ -443,6 +561,10 @@ def resolve_report(report_id):
         if report:
             report.is_resolved = True
             db.session.commit()
+            
+            # Sync to JSON
+            sync_to_json()
+            
             flash('Report marked as resolved.', 'success')
         else:
             flash('Report not found.', 'danger')

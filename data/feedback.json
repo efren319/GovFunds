@@ -1,1 +1,142 @@
-[]
+[
+  {
+    "feedback_id": 1,
+    "name": "Juan Dela Cruz",
+    "email": "juan@email.com",
+    "message": "Some project details lack complete budget breakdown.",
+    "created_at": "2025-11-18T14:32:15"
+  },
+  {
+    "feedback_id": 2,
+    "name": "Maria Santos",
+    "email": "maria@email.com",
+    "message": "Please include status updates for delayed projects.",
+    "created_at": "2025-12-02T09:15:42"
+  },
+  {
+    "feedback_id": 3,
+    "name": "Pedro Reyes",
+    "email": "pedro@email.com",
+    "message": "It would be helpful to upload proof-of-work photos monthly.",
+    "created_at": "2025-11-25T16:48:20"
+  },
+  {
+    "feedback_id": 4,
+    "name": "Ana Lopez",
+    "email": "ana@email.com",
+    "message": "Some project locations are incorrect on the map.",
+    "created_at": "2025-12-05T11:22:38"
+  },
+  {
+    "feedback_id": 5,
+    "name": "Carlo Tan",
+    "email": "carlo@email.com",
+    "message": "Additional filters like barangay or phase would improve reports.",
+    "created_at": "2025-11-30T13:45:10"
+  },
+  {
+    "feedback_id": 6,
+    "name": "Liza Cruz",
+    "email": "liza@email.com",
+    "message": "The project timelines are not always updated.",
+    "created_at": "2025-12-08T08:30:55"
+  },
+  {
+    "feedback_id": 7,
+    "name": "Mark Lim",
+    "email": "mark@email.com",
+    "message": "Add a feature to compare planned vs. actual spending.",
+    "created_at": "2025-11-22T15:18:33"
+  },
+  {
+    "feedback_id": 8,
+    "name": "Susan Reyes",
+    "email": "susan@email.com",
+    "message": "Some uploaded project receipts are blurry or unreadable.",
+    "created_at": "2025-12-03T10:05:47"
+  },
+  {
+    "feedback_id": 9,
+    "name": "Jose Santos",
+    "email": "jose@email.com",
+    "message": "Please add a category for urgent community concerns.",
+    "created_at": "2025-11-27T17:20:12"
+  },
+  {
+    "feedback_id": 10,
+    "name": "Carla Tan",
+    "email": "carla@email.com",
+    "message": "Some reports take too long before being marked resolved.",
+    "created_at": "2025-12-06T12:40:25"
+  },
+  {
+    "feedback_id": 11,
+    "name": "Daniel Lim",
+    "email": "daniel@email.com",
+    "message": "The dashboard charts should reflect real-time financial data.",
+    "created_at": "2025-11-20T14:10:18"
+  },
+  {
+    "feedback_id": 12,
+    "name": "Rosa Cruz",
+    "email": "rosa@email.com",
+    "message": "Notifications for project updates would help citizens stay informed.",
+    "created_at": "2025-12-01T09:50:30"
+  },
+  {
+    "feedback_id": 13,
+    "name": "Miguel Reyes",
+    "email": "miguel@email.com",
+    "message": "Add clearer labeling for completed vs. ongoing projects.",
+    "created_at": "2025-11-28T16:35:22"
+  },
+  {
+    "feedback_id": 14,
+    "name": "Patricia Lopez",
+    "email": "patricia@email.com",
+    "message": "Some project reports have missing contractor details.",
+    "created_at": "2025-12-04T13:25:48"
+  },
+  {
+    "feedback_id": 15,
+    "name": "Henry Tan",
+    "email": "henry@email.com",
+    "message": "Good initiative but needs more transparency on project bidding.",
+    "created_at": "2025-11-23T11:15:40"
+  },
+  {
+    "feedback_id": 16,
+    "name": "Grace Santos",
+    "email": "grace@email.com",
+    "message": "Include documents such as contracts and purchase orders.",
+    "created_at": "2025-12-07T15:42:08"
+  },
+  {
+    "feedback_id": 17,
+    "name": "Ramon Lim",
+    "email": "ramon@email.com",
+    "message": "Tracking report history would help verify consistent follow-ups.",
+    "created_at": "2025-11-21T10:28:55"
+  },
+  {
+    "feedback_id": 18,
+    "name": "Lucia Cruz",
+    "email": "lucia@email.com",
+    "message": "Add an option for citizens to rate government response quality.",
+    "created_at": "2025-12-02T14:18:36"
+  },
+  {
+    "feedback_id": 19,
+    "name": "Erik Reyes",
+    "email": "erik@email.com",
+    "message": "Some hazard-related reports lack proper prioritization tags.",
+    "created_at": "2025-11-26T12:05:19"
+  },
+  {
+    "feedback_id": 20,
+    "name": "Jenny Tan",
+    "email": "jenny@email.com",
+    "message": "Project descriptions should include the responsible agency and budget.",
+    "created_at": "2025-12-05T16:50:42"
+  }
+]
