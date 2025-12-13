@@ -146,6 +146,10 @@ function filterAndSortProjects() {
         aVal = parseFloat(a.dataset.spent) || 0;
         bVal = parseFloat(b.dataset.spent) || 0;
         break;
+      case 'reports':
+        aVal = parseInt(a.dataset.reports) || 0;
+        bVal = parseInt(b.dataset.reports) || 0;
+        break;
       case 'status':
         aVal = a.dataset.status || '';
         bVal = b.dataset.status || '';

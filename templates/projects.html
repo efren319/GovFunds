@@ -15,6 +15,7 @@
         <option value="date">Sort by Date</option>
         <option value="budget">Sort by Budget</option>
         <option value="spent">Sort by Spent</option>
+        <option value="reports">Sort by Reports</option>
       </select>
       <select id="sortOrder" onchange="filterAndSortProjects()">
         <option value="asc">Ascending ↑</option>
@@ -84,7 +85,8 @@
        data-spent="{{ p.budget_spent or 0 }}"
        data-status="{{ p.project_status|lower }}"
        data-region="{{ (p.region_name or '')|lower }}"
-       data-sector="{{ (p.sector_name or '')|lower }}">
+       data-sector="{{ (p.sector_name or '')|lower }}"
+       data-reports="{{ p.reports|length or 0 }}">
     {% if session.get('admin_user') %}
     <button class="edit-btn" data-project-id="{{ p.project_id }}">✎ Edit</button>
     {% endif %}
