@@ -15,10 +15,8 @@ class Project(db.Model):
     budget_spent = db.Column(db.Float, default=0)
 
     project_status = db.Column(db.String(20), default='Planned')
-
     start_date = db.Column(db.Date)
     end_date = db.Column(db.Date)
-
     region_name = db.Column(db.String(100))
     sector_name = db.Column(db.String(100))
     
