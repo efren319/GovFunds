@@ -201,11 +201,4 @@
 </div>
 
 <script src="{{ url_for('static', filename='projects.js') }}"></script>
-<script>
-  // Initialize with regions data from server
-  document.addEventListener('DOMContentLoaded', function() {
-    const regions = JSON.parse('{{ regions_list|tojson|safe }}');
-    initProjectsPage(regions);
-  });
-</script>
 {% endblock %}

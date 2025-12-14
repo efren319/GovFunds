@@ -317,3 +317,14 @@ function deleteProject() {
     }
   });
 }
+
+// Initialize projects page on DOM load
+document.addEventListener('DOMContentLoaded', function() {
+  // Get regions from data attribute or window variable
+  let regions = [];
+  const regionsElement = document.querySelector('[data-regions]');
+  if (regionsElement) {
+    regions = JSON.parse(regionsElement.dataset.regions);
+  }
+  initProjectsPage(regions);
+});
