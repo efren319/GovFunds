@@ -9,6 +9,7 @@ from datetime import datetime
 from werkzeug.utils import secure_filename
 from models import db, Project, Feedback, ProjectReport
 
+# -------- CONFIGURATION --------
 # File upload configuration
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'images', 'projects')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
@@ -58,7 +59,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Initialize database
 db.init_app(app)
 
-# Initialize database on startup
+# -------- DATABASE INITIALIZATION --------
 def init_db():
     """Initialize database tables and seed data if empty"""
     with app.app_context():
@@ -175,6 +176,7 @@ def sync_to_json():
 # Run initialization when app starts
 init_db()
 
+# -------- AUTHENTICATION --------
 # Authentication decorator
 def login_required(f):
     @wraps(f)
@@ -195,6 +197,7 @@ ADMIN_CREDENTIALS = {
     'staff': hash_password('staff123')
 }
 
+# -------- ROUTES --------
 # Login route
 @app.route('/login', methods=['GET', 'POST'])
 def login():
