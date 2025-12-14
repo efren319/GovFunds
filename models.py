@@ -3,7 +3,7 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
----> PROJECTS <---
+# ---------------- PROJECT TABLE ----------------
 class Project(db.Model):
     project_id = db.Column(db.Integer, primary_key=True)
     project_name = db.Column(db.String(100), nullable=False)
@@ -19,7 +19,7 @@ class Project(db.Model):
     reports = db.relationship('ProjectReport', backref='project', lazy=True, cascade='all, delete-orphan')
 
 
----> FEEDBACK <---
+# ---------------- FEEDBACK TABLE ----------------
 class Feedback(db.Model):
     feedback_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
@@ -28,7 +28,7 @@ class Feedback(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 
----> PROJECT REPORTS <---
+# ---------------- PROJECT REPORT TABLE ----------------
 class ProjectReport(db.Model):
     report_id = db.Column(db.Integer, primary_key=True)
     project_id = db.Column(db.Integer, db.ForeignKey('project.project_id'), nullable=False)
