@@ -147,7 +147,7 @@
     {% for p in projects %}
     <tr>
       <td>{{ p['id'] }}</td>
-      <td><a href="{{ url_for('project_detail', project_id=p['id']) }}" style="color: inherit; text-decoration: inherit;">{{ p['name'] }}</a></td>
+      <td><a href="{{ url_for('project_detail', pid=p['id']) }}" style="color: inherit; text-decoration: inherit;">{{ p['name'] }}</a></td>
       <td>{{ p['project_sector'] }}</td>
       <td>₱{{ "{:,.2f}".format(p['allocated_budget'] or 0) }}</td>
       <td>₱{{ "{:,.2f}".format(p['spent'] or 0) }}</td>
