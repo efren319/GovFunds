@@ -67,7 +67,6 @@ Alternatively, copy and edit `.env.example`:
 
 ```bash
 cp .env.example .env
-# Edit .env with your database credentials
 ```
 
 ### 5. Create PostgreSQL Database
@@ -224,30 +223,9 @@ Username: admin    Password: admin123
 Username: staff    Password: staff123
 ```
 
-## Configuration
-
-### Image Management
-- Supported formats: PNG, JPG, JPEG, GIF, WebP
-- Projects without images use sector-based defaults
-- Report images are optional
-- Uploads stored in `static/images/projects/`
-
-### Responsive Design
-- Mobile-first approach
-- Tablet & desktop optimizations
-- Scrollable data tables (admin)
-- Touch-friendly buttons
-
-### Sessions & Security
-- Session cookies marked HttpOnly
-- 24-hour session timeout
-- Password hashing with SHA-256
-- CSRF protection on forms
-
 ## Data Files
 
 - `seed.sql` – 60 sample records (INSERT statements only)
-- `seed_backup.sql` – Complete schema + data backup
 - `schema.sql` – Schema reference
 - `data/*.json` – Auto-exported from database
 
@@ -272,17 +250,9 @@ python reset_db.py
 ```
 Then restart the app to reseed.
 
-## Development Notes
-
-- Database initialization is automatic on app startup
-- Models defined in `models.py`, routes in `app.py`
-- No separate seed scripts needed—all in `app.py`
-- JSON exports happen automatically on data changes
-- Admin section scrollable for large datasets
-
 ## License
 
-Open source project for government transparency
+Open source project for DBMS and ACP
 
 ## Author
 
