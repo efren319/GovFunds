@@ -10,6 +10,7 @@ INSERT INTO project (
     end_date,
     project_image
 ) VALUES
+---> PROJECTS <---
 -- 1
 ('Barangay Hall Renovation', 'Road Infrastructure',
  'Renovation of the Barangay Hall including roofing and interiors',
@@ -150,9 +151,7 @@ INSERT INTO project (
  'Cordillera Administrative Region',
  '2025-03-15', '2026-12-15', 'images/projects/project_20.png');
 
-
-
-
+---> FEEDBACK <---
 INSERT INTO feedback (name, email, message, created_at) VALUES
 ('Juan Dela Cruz', 'juan@email.com', 'Some project details lack complete budget breakdown.', '2025-11-18 14:32:15'),
 ('Maria Santos', 'maria@email.com', 'Please include status updates for delayed projects.', '2025-12-02 09:15:42'),
@@ -175,8 +174,7 @@ INSERT INTO feedback (name, email, message, created_at) VALUES
 ('Erik Reyes', 'erik@email.com', 'Some hazard-related reports lack proper prioritization tags.', '2025-11-26 12:05:19'),
 ('Jenny Tan', 'jenny@email.com', 'Project descriptions should include the responsible agency and budget.', '2025-12-05 16:50:42');
 
-
-
+---> PROJECT REPORTS <---
 INSERT INTO project_report (
     project_id,
     reporter_name,
