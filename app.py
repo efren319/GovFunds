@@ -480,7 +480,8 @@ def feedback():
                         timestamp = int(time.time())
                         filename = f"report_{timestamp}_{filename}"
                         file.save(os.path.join(UPLOAD_FOLDER, filename))
-                        image_file = filename
+                        # Store full path for display
+                        image_file = f"images/projects/{filename}"
                     elif file and file.filename:
                         flash('Invalid file type. Please use PNG, JPG, JPEG, GIF, or WebP.', 'danger')
                         return redirect(url_for('feedback'))

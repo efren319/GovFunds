@@ -58,7 +58,7 @@ INSERT INTO project (
  'Reinforce riverbanks to prevent erosion',
  650000, 320000, 'Ongoing',
  'Region IV-A',
- '2025-02-20', '2026-12-15', 'images/projects/project1.webp'),
+ '2025-02-20', '2026-12-15', NULL),
 
 -- 8
 ('Forest Reforestation Program', 'Local Infrastructure Support',

@@ -9,7 +9,7 @@
     />
     {% else %}
     <img
-      src="{{ url_for('static', filename='images/' + (project.sector_name or 'Road Infrastructure') + '.webp') }}"
+      src="{{ url_for('static', filename='images/projects/' + (project.sector_name or 'Road Infrastructure') + '.webp') }}"
       alt="{{ project.sector_name or 'Project' }}"
     />
     {% endif %}
