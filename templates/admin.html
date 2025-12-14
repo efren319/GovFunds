@@ -105,7 +105,7 @@
     {% if report['report_image'] %}
     <div class="report-image">
       <img
-        src="{{ url_for('static', filename='images/projects/' + report['report_image']) }}"
+        src="{{ url_for('static', filename=report['report_image']) }}"
         alt="Report image"
       />
     </div>
