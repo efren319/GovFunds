@@ -7,7 +7,7 @@
     "report_subject": "Roof Problem",
     "report_message": "Roofing work not completed on Barangay Hall",
     "report_type": "General Feedback",
-    "report_image": "images/projects/project1.webp",
+    "report_image": null,
     "is_resolved": false,
     "created_at": "2025-11-19T09:15:20"
   },
@@ -19,7 +19,7 @@
     "report_subject": "Potholes",
     "report_message": "Potholes still visible on San Miguel Road",
     "report_type": "Issue/Problem",
-    "report_image": "images/projects/project1.webp",
+    "report_image": "images/projects/report_2(1).png",
     "is_resolved": false,
     "created_at": "2025-11-23T14:42:35"
   },
@@ -31,7 +31,7 @@
     "report_subject": "Playground Issue",
     "report_message": "Playground equipment not installed in Public Park",
     "report_type": "Concern",
-    "report_image": "images/projects/project1.webp",
+    "report_image": null,
     "is_resolved": false,
     "created_at": "2025-11-27T10:28:18"
   },
@@ -43,7 +43,7 @@
     "report_subject": "Library Incomplete",
     "report_message": "Library rooms still incomplete and unfinished",
     "report_type": "General Feedback",
-    "report_image": "images/projects/project1.webp",
+    "report_image": null,
     "is_resolved": false,
     "created_at": "2025-12-01T15:50:42"
   },
@@ -55,7 +55,7 @@
     "report_subject": "Pump Delay",
     "report_message": "Water pump installation has been delayed",
     "report_type": "Issue/Problem",
-    "report_image": "images/projects/project1.webp",
+    "report_image": "images/projects/report_5(1).png",
     "is_resolved": false,
     "created_at": "2025-11-21T11:35:55"
   },
@@ -67,7 +67,7 @@
     "report_subject": "Broken Streetlights",
     "report_message": "Some streetlights not functioning properly",
     "report_type": "General Feedback",
-    "report_image": "images/projects/project1.webp",
+    "report_image": "images/projects/report_6(1).png",
     "is_resolved": false,
     "created_at": "2025-12-04T16:20:38"
   },
@@ -79,7 +79,7 @@
     "report_subject": "Riverbank Erosion",
     "report_message": "Riverbank erosion continues despite reinforcement work",
     "report_type": "Concern",
-    "report_image": "images/projects/project1.webp",
+    "report_image": null,
     "is_resolved": false,
     "created_at": "2025-11-25T12:05:22"
   },
@@ -91,7 +91,7 @@
     "report_subject": "Trees Not Planted",
     "report_message": "Many trees not fully planted in reforestation area",
     "report_type": "General Feedback",
-    "report_image": "images/projects/project1.webp",
+    "report_image": null,
     "is_resolved": false,
     "created_at": "2025-11-22T13:18:47"
   },
@@ -103,7 +103,7 @@
     "report_subject": "Chemical Leaking",
     "report_message": "Chemical waste leaking from containment area",
     "report_type": "Issue/Problem",
-    "report_image": "images/projects/project1.webp",
+    "report_image": "images/projects/report_9(1).png",
     "is_resolved": false,
     "created_at": "2025-12-03T09:40:15"
   },
@@ -115,7 +115,7 @@
     "report_subject": "Drainage Blocked",
     "report_message": "Drainage system still blocked with debris",
     "report_type": "Issue/Problem",
-    "report_image": "images/projects/project1.webp",
+    "report_image": null,
     "is_resolved": false,
     "created_at": "2025-11-28T14:25:30"
   },
@@ -127,7 +127,7 @@
     "report_subject": "Flood Barriers",
     "report_message": "Flood barriers incomplete and need repairs",
     "report_type": "General Feedback",
-    "report_image": "images/projects/project1.webp",
+    "report_image": null,
     "is_resolved": false,
     "created_at": "2025-12-02T10:55:48"
   },
@@ -139,7 +139,7 @@
     "report_subject": "Garbage Bins Insufficient",
     "report_message": "Number of garbage bins insufficient for area",
     "report_type": "Concern",
-    "report_image": "images/projects/project1.webp",
+    "report_image": null,
     "is_resolved": false,
     "created_at": "2025-11-30T15:12:26"
   },
@@ -151,7 +151,7 @@
     "report_subject": "Vehicle Still Present",
     "report_message": "Abandoned vehicle still blocking the road",
     "report_type": "Issue/Problem",
-    "report_image": "images/projects/project1.webp",
+    "report_image": "images/projects/report_13(1).png",
     "is_resolved": false,
     "created_at": "2025-12-05T11:38:50"
   },
@@ -163,7 +163,7 @@
     "report_subject": "Unsafe Wiring",
     "report_message": "Electrical wiring remains unsafe in public areas",
     "report_type": "General Feedback",
-    "report_image": "images/projects/project1.webp",
+    "report_image": "images/projects/report_14(1).png",
     "is_resolved": false,
     "created_at": "2025-11-24T13:45:23"
   },
@@ -175,7 +175,7 @@
     "report_subject": "Air Pollution High",
     "report_message": "Air pollution levels still high near factories",
     "report_type": "Concern",
-    "report_image": "images/projects/project1.webp",
+    "report_image": null,
     "is_resolved": false,
     "created_at": "2025-12-06T16:30:42"
   },
@@ -187,7 +187,7 @@
     "report_subject": "Security System Needed",
     "report_message": "CCTV cameras and security system needed for Hall",
     "report_type": "General Feedback",
-    "report_image": "images/projects/project1.webp",
+    "report_image": null,
     "is_resolved": false,
     "created_at": "2025-11-26T10:15:35"
   },
@@ -199,7 +199,7 @@
     "report_subject": "Road Signs Missing",
     "report_message": "Road signage missing on San Miguel Road repairs",
     "report_type": "Issue/Problem",
-    "report_image": "images/projects/project1.webp",
+    "report_image": null,
     "is_resolved": false,
     "created_at": "2025-12-04T14:20:18"
   },
@@ -211,7 +211,7 @@
     "report_subject": "Stagnant Water",
     "report_message": "Stagnant water breeding mosquito in area",
     "report_type": "Concern",
-    "report_image": "images/projects/project1.webp",
+    "report_image": "images/projects/report_18(1).png",
     "is_resolved": false,
     "created_at": "2025-11-29T12:35:55"
   },
@@ -223,7 +223,7 @@
     "report_subject": "Illegal Logging Observed",
     "report_message": "Illegal logging still observed in protected forest",
     "report_type": "General Feedback",
-    "report_image": "images/projects/project1.webp",
+    "report_image": null,
     "is_resolved": false,
     "created_at": "2025-12-01T09:50:26"
   },
@@ -235,7 +235,7 @@
     "report_subject": "Potholes Reappearing",
     "report_message": "Potholes reappearing on main road repairs",
     "report_type": "Issue/Problem",
-    "report_image": "images/projects/project1.webp",
+    "report_image": "images/projects/report_20(1).png",
     "is_resolved": false,
     "created_at": "2025-11-20T15:25:40"
   }

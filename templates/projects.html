@@ -94,7 +94,7 @@
       {% if p.project_image %}
       <img src="{{ url_for('static', filename=p.project_image) }}" alt="{{ p.project_name }}">
       {% else %}
-      <img src="{{ url_for('static', filename='images/' + (p.sector_name or 'Road Infrastructure') + '.webp') }}" alt="{{ p.sector_name or 'Project' }}">
+      <img src="{{ url_for('static', filename='images/projects/' + (p.sector_name or 'Road Infrastructure') + '.webp') }}" alt="{{ p.sector_name or 'Project' }}">
       {% endif %}
     </a>
     <div class="project-card-content">

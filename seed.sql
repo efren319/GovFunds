@@ -54,42 +54,42 @@ INSERT INTO project (
  'Renovation of the Barangay Hall including roofing and interiors',
  500000, 200000, 'Completed',
  'National Capital Region',
- '2025-01-10', '2026-12-31', 'images/projects/project1.webp'),
+ '2025-01-10', '2026-12-31', 'images/projects/project_1.png'),
 
 -- 2
 ('San Miguel Road Repair', 'Special Infrastructure Projects',
  'Road resurfacing and pothole repairs',
  750000, 400000, 'Planned',
  'Cordillera Administrative Region',
- '2025-03-15', '2026-11-30', 'images/projects/project1.webp'),
+ '2025-03-15', '2026-11-30', NULL),
 
 -- 3
 ('Public Park Landscaping', 'Local Infrastructure Support',
  'Landscaping and playground installation',
  300000, 150000, 'Ongoing',
  'Region I',
- '2025-02-01', '2026-10-30', 'images/projects/project1.webp'),
+ '2025-02-01', '2026-10-30', 'images/projects/project_3.png'),
 
 -- 4
 ('Barangay Library Expansion', 'Road Infrastructure',
  'Adding more rooms and bookshelves',
  450000, 220000, 'Completed',
  'National Capital Region',
- '2025-04-01', '2026-12-15', 'images/projects/project1.webp'),
+ '2025-04-01', '2026-12-15', NULL),
 
 -- 5
 ('Water Pump Installation', 'Disaster Response and Rehabilitation',
  'Installation of new water pumps',
  600000, 250000, 'Ongoing',
  'Region II',
- '2025-05-05', '2026-11-20', 'images/projects/project1.webp'),
+ '2025-05-05', '2026-11-20', NULL),
 
 -- 6
 ('Street Lighting Upgrade', 'Local Infrastructure Support',
  'Install new LED street lights',
  400000, 180000, 'Planned',
  'Region III',
- '2025-06-10', '2026-12-10', 'images/projects/project1.webp'),
+ '2025-06-10', '2026-12-10', 'images/projects/project_6.png'),
 
 -- 7
 ('Riverbank Reinforcement', 'Local Infrastructure Support',
@@ -103,91 +103,91 @@ INSERT INTO project (
  'Planting trees in protected forest area',
  800000, 500000, 'Completed',
  'Region IV-A',
- '2025-03-01', '2026-12-31', 'images/projects/project1.webp'),
+ '2025-03-01', '2026-12-31', 'images/projects/project_8.png'),
 
 -- 9
 ('Chemical Waste Containment', 'Flood Control and Drainage',
  'Proper disposal and containment of chemical waste',
  550000, 300000, 'Ongoing',
  'Region IV-B',
- '2025-01-25', '2026-11-30', 'images/projects/project1.webp'),
+ '2025-01-25', '2026-11-30', 'images/projects/project_9.png'),
 
 -- 10
 ('Drainage System Improvement', 'Bridge Infrastructure',
  'Clearing and upgrading drainage',
  450000, 200000, 'Planned',
  'Region V',
- '2025-02-15', '2026-10-31', 'images/projects/project1.webp'),
+ '2025-02-15', '2026-10-31', 'images/projects/project_10.png'),
 
 -- 11
 ('Flood Control Project', 'Bridge Infrastructure',
  'Flood barriers and water diversion',
  950000, 600000, 'Ongoing',
  'Cordillera Administrative Region',
- '2025-01-05', '2026-12-15', 'images/projects/project1.webp'),
+ '2025-01-05', '2026-12-15', 'images/projects/project_11.png'),
 
 -- 12
 ('Garbage Collection Enhancement', 'Road Infrastructure',
  'Adding garbage trucks and bins',
  400000, 180000, 'Completed',
  'National Capital Region',
- '2025-03-01', '2026-12-31', 'images/projects/project1.webp'),
+ '2025-03-01', '2026-12-31', 'images/projects/project_12.png'),
 
 -- 13
 ('Abandoned Vehicle Removal', 'Special Infrastructure Projects',
  'Remove abandoned vehicles blocking roads',
  250000, 150000, 'Ongoing',
  'Region II',
- '2025-04-15', '2026-11-30', 'images/projects/project1.webp'),
+ '2025-04-15', '2026-11-30', 'images/projects/project_13.png'),
 
 -- 14
 ('Electrical Wiring Safety', 'Local Infrastructure Support',
  'Replace unsafe electrical wirings in public areas',
  300000, 120000, 'Planned',
  'Region III',
- '2025-05-10', '2026-10-31', 'images/projects/project1.webp'),
+ '2025-05-10', '2026-10-31', 'images/projects/project_14.png'),
 
 -- 15
 ('Air Pollution Monitoring', 'Flood Control and Drainage',
  'Monitoring pollution near factories',
  350000, 150000, 'Ongoing',
  'Region IV-B',
- '2025-03-20', '2026-12-15', 'images/projects/project1.webp'),
+ '2025-03-20', '2026-12-15', NULL),
 
 -- 16
 ('Barangay Hall Security Upgrade', 'Road Infrastructure',
  'CCTV cameras and security systems',
  200000, 100000, 'Completed',
  'National Capital Region',
- '2025-02-10', '2026-11-30', 'images/projects/project1.webp'),
+ '2025-02-10', '2026-11-30', 'images/projects/project_16.png'),
 
 -- 17
 ('Road Signage Installation', 'Special Infrastructure Projects',
  'Install traffic signs and markers',
  150000, 50000, 'Ongoing',
  'Cordillera Administrative Region',
- '2025-03-05', '2026-11-15', 'images/projects/project1.webp'),
+ '2025-03-05', '2026-11-15', 'images/projects/project_17.png'),
 
 -- 18
 ('Mosquito Control Program', 'Disaster Response and Rehabilitation',
  'Remove stagnant water and dengue breeding sites',
  300000, 150000, 'Planned',
  'Region II',
- '2025-01-20', '2026-12-01', 'images/projects/project1.webp'),
+ '2025-01-20', '2026-12-01', 'images/projects/project_18.png'),
 
 -- 19
 ('Forest Patrol Program', 'Local Infrastructure Support',
  'Protect forests from illegal logging',
  500000, 250000, 'Ongoing',
  'Region IV-A',
- '2025-02-10', '2026-12-31', 'images/projects/project1.webp'),
+ '2025-02-10', '2026-12-31', 'images/projects/project_19.png'),
 
 -- 20
 ('Road Repair and Maintenance', 'Special Infrastructure Projects',
  'Pothole filling and road leveling',
  700000, 400000, 'Completed',
  'Cordillera Administrative Region',
- '2025-03-15', '2026-12-15', 'images/projects/project1.webp');
+ '2025-03-15', '2026-12-15', 'images/projects/project_20.png');
 
 
 
@@ -227,23 +227,23 @@ INSERT INTO project_report (
     is_resolved,
     created_at
 ) VALUES
-(1, 'Juan Dela Cruz', 'juan@email.com', 'Roof Problem', 'Roofing work not completed on Barangay Hall', 'General Feedback', 'images/projects/project1.webp', FALSE, '2025-11-19 09:15:20'),
-(2, 'Maria Santos', 'maria@email.com', 'Potholes', 'Potholes still visible on San Miguel Road', 'Issue/Problem', 'images/projects/project1.webp', FALSE, '2025-11-23 14:42:35'),
-(3, 'Pedro Reyes', 'pedro@email.com', 'Playground Issue', 'Playground equipment not installed in Public Park', 'Concern', 'images/projects/project1.webp', FALSE, '2025-11-27 10:28:18'),
-(4, 'Ana Lopez', 'ana@email.com', 'Library Incomplete', 'Library rooms still incomplete and unfinished', 'General Feedback', 'images/projects/project1.webp', FALSE, '2025-12-01 15:50:42'),
-(5, 'Carlo Tan', 'carlo@email.com', 'Pump Delay', 'Water pump installation has been delayed', 'Issue/Problem', 'images/projects/project1.webp', FALSE, '2025-11-21 11:35:55'),
-(6, 'Liza Cruz', 'liza@email.com', 'Broken Streetlights', 'Some streetlights not functioning properly', 'General Feedback', 'images/projects/project1.webp', FALSE, '2025-12-04 16:20:38'),
-(7, 'Mark Lim', 'mark@email.com', 'Riverbank Erosion', 'Riverbank erosion continues despite reinforcement work', 'Concern', 'images/projects/project1.webp', FALSE, '2025-11-25 12:05:22'),
-(8, 'Susan Reyes', 'susan@email.com', 'Trees Not Planted', 'Many trees not fully planted in reforestation area', 'General Feedback', 'images/projects/project1.webp', FALSE, '2025-11-22 13:18:47'),
-(9, 'Jose Santos', 'jose@email.com', 'Chemical Leaking', 'Chemical waste leaking from containment area', 'Issue/Problem', 'images/projects/project1.webp', FALSE, '2025-12-03 09:40:15'),
-(10, 'Carla Tan', 'carla@email.com', 'Drainage Blocked', 'Drainage system still blocked with debris', 'Issue/Problem', 'images/projects/project1.webp', FALSE, '2025-11-28 14:25:30'),
-(11, 'Daniel Lim', 'daniel@email.com', 'Flood Barriers', 'Flood barriers incomplete and need repairs', 'General Feedback', 'images/projects/project1.webp', FALSE, '2025-12-02 10:55:48'),
-(12, 'Rosa Cruz', 'rosa@email.com', 'Garbage Bins Insufficient', 'Number of garbage bins insufficient for area', 'Concern', 'images/projects/project1.webp', FALSE, '2025-11-30 15:12:26'),
-(13, 'Miguel Reyes', 'miguel@email.com', 'Vehicle Still Present', 'Abandoned vehicle still blocking the road', 'Issue/Problem', 'images/projects/project1.webp', FALSE, '2025-12-05 11:38:50'),
-(14, 'Patricia Lopez', 'patricia@email.com', 'Unsafe Wiring', 'Electrical wiring remains unsafe in public areas', 'General Feedback', 'images/projects/project1.webp', FALSE, '2025-11-24 13:45:23'),
-(15, 'Henry Tan', 'henry@email.com', 'Air Pollution High', 'Air pollution levels still high near factories', 'Concern', 'images/projects/project1.webp', FALSE, '2025-12-06 16:30:42'),
-(1, 'Grace Santos', 'grace@email.com', 'Security System Needed', 'CCTV cameras and security system needed for Hall', 'General Feedback', 'images/projects/project1.webp', FALSE, '2025-11-26 10:15:35'),
-(2, 'Ramon Lim', 'ramon@email.com', 'Road Signs Missing', 'Road signage missing on San Miguel Road repairs', 'Issue/Problem', 'images/projects/project1.webp', FALSE, '2025-12-04 14:20:18'),
-(18, 'Lucia Cruz', 'lucia@email.com', 'Stagnant Water', 'Stagnant water breeding mosquito in area', 'Concern', 'images/projects/project1.webp', FALSE, '2025-11-29 12:35:55'),
-(19, 'Erik Reyes', 'erik@email.com', 'Illegal Logging Observed', 'Illegal logging still observed in protected forest', 'General Feedback', 'images/projects/project1.webp', FALSE, '2025-12-01 09:50:26'),
-(20, 'Jenny Tan', 'jenny@email.com', 'Potholes Reappearing', 'Potholes reappearing on main road repairs', 'Issue/Problem', 'images/projects/project1.webp', FALSE, '2025-11-20 15:25:40');
+(1, 'Juan Dela Cruz', 'juan@email.com', 'Roof Problem', 'Roofing work not completed on Barangay Hall', 'General Feedback', NULL, FALSE, '2025-11-19 09:15:20'),
+(2, 'Maria Santos', 'maria@email.com', 'Potholes', 'Potholes still visible on San Miguel Road', 'Issue/Problem', 'images/projects/report_2(1).png', FALSE, '2025-11-23 14:42:35'),
+(3, 'Pedro Reyes', 'pedro@email.com', 'Playground Issue', 'Playground equipment not installed in Public Park', 'Concern', NULL, FALSE, '2025-11-27 10:28:18'),
+(4, 'Ana Lopez', 'ana@email.com', 'Library Incomplete', 'Library rooms still incomplete and unfinished', 'General Feedback', NULL, FALSE, '2025-12-01 15:50:42'),
+(5, 'Carlo Tan', 'carlo@email.com', 'Pump Delay', 'Water pump installation has been delayed', 'Issue/Problem', 'images/projects/report_5(1).png', FALSE, '2025-11-21 11:35:55'),
+(6, 'Liza Cruz', 'liza@email.com', 'Broken Streetlights', 'Some streetlights not functioning properly', 'General Feedback', 'images/projects/report_6(1).png', FALSE, '2025-12-04 16:20:38'),
+(7, 'Mark Lim', 'mark@email.com', 'Riverbank Erosion', 'Riverbank erosion continues despite reinforcement work', 'Concern', NULL, FALSE, '2025-11-25 12:05:22'),
+(8, 'Susan Reyes', 'susan@email.com', 'Trees Not Planted', 'Many trees not fully planted in reforestation area', 'General Feedback', NULL, FALSE, '2025-11-22 13:18:47'),
+(9, 'Jose Santos', 'jose@email.com', 'Chemical Leaking', 'Chemical waste leaking from containment area', 'Issue/Problem', 'images/projects/report_9(1).png', FALSE, '2025-12-03 09:40:15'),
+(10, 'Carla Tan', 'carla@email.com', 'Drainage Blocked', 'Drainage system still blocked with debris', 'Issue/Problem', NULL, FALSE, '2025-11-28 14:25:30'),
+(11, 'Daniel Lim', 'daniel@email.com', 'Flood Barriers', 'Flood barriers incomplete and need repairs', 'General Feedback', NULL, FALSE, '2025-12-02 10:55:48'),
+(12, 'Rosa Cruz', 'rosa@email.com', 'Garbage Bins Insufficient', 'Number of garbage bins insufficient for area', 'Concern', NULL, FALSE, '2025-11-30 15:12:26'),
+(13, 'Miguel Reyes', 'miguel@email.com', 'Vehicle Still Present', 'Abandoned vehicle still blocking the road', 'Issue/Problem', 'images/projects/report_13(1).png', FALSE, '2025-12-05 11:38:50'),
+(14, 'Patricia Lopez', 'patricia@email.com', 'Unsafe Wiring', 'Electrical wiring remains unsafe in public areas', 'General Feedback', 'images/projects/report_14(1).png', FALSE, '2025-11-24 13:45:23'),
+(15, 'Henry Tan', 'henry@email.com', 'Air Pollution High', 'Air pollution levels still high near factories', 'Concern', NULL, FALSE, '2025-12-06 16:30:42'),
+(1, 'Grace Santos', 'grace@email.com', 'Security System Needed', 'CCTV cameras and security system needed for Hall', 'General Feedback', NULL, FALSE, '2025-11-26 10:15:35'),
+(2, 'Ramon Lim', 'ramon@email.com', 'Road Signs Missing', 'Road signage missing on San Miguel Road repairs', 'Issue/Problem', NULL, FALSE, '2025-12-04 14:20:18'),
+(18, 'Lucia Cruz', 'lucia@email.com', 'Stagnant Water', 'Stagnant water breeding mosquito in area', 'Concern', 'images/projects/report_18(1).png', FALSE, '2025-11-29 12:35:55'),
+(19, 'Erik Reyes', 'erik@email.com', 'Illegal Logging Observed', 'Illegal logging still observed in protected forest', 'General Feedback', NULL, FALSE, '2025-12-01 09:50:26'),
+(20, 'Jenny Tan', 'jenny@email.com', 'Potholes Reappearing', 'Potholes reappearing on main road repairs', 'Issue/Problem', 'images/projects/report_20(1).png', FALSE, '2025-11-20 15:25:40');
